@@ -35,7 +35,8 @@ Example usage:
    python crossref_checker.py -i references.tex -o results.json
 
 In both cases, the script outputs a list of results with a top-level
-``status`` field (``match_found``, ``no_likely_match``, or ``no_match``).
+``status`` field (``match_found``, ``doi_conflict``, ``no_likely_match``, or
+``no_match``).
 For ``match_found`` results, a ``comparison`` dictionary is included. For
 unsuccessful lookups, an ``error`` message is included.
 
@@ -435,8 +436,11 @@ class CrossrefChecker:
         -------
         list of dict
             Each entry contains the original article data plus a ``status`` key.
-            ``match_found`` entries include ``comparison``; non-matches include
-            an ``error`` message and optional match diagnostics.
+            ``match_found`` entries include ``comparison``.
+            ``doi_conflict`` entries indicate DOI lookup succeeded but title
+            did not match the DOI record.
+            Non-matches include an ``error`` message and optional match
+            diagnostics.
         """
         results: List[Dict[str, Any]] = []
         for article in articles:
@@ -444,6 +448,19 @@ class CrossrefChecker:
             meta = lookup.get("metadata")
             if meta:
                 comparison = self.compare(article, meta)
+                if lookup.get("matched_by") == "doi" and comparison.get("title", {}).get("match") is False:
+                    results.append(
+                        {
+                            "article": article.__dict__,
+                            "comparison": comparison,
+                            "status": "doi_conflict",
+                            "matched_by": lookup.get("matched_by"),
+                            "title_score": lookup.get("score"),
+                            "error": "DOI resolved but title does not match DOI record",
+                        }
+                    )
+                    time.sleep(1)
+                    continue
                 results.append(
                     {
                         "article": article.__dict__,
@@ -602,7 +619,18 @@ def _extract_url(text: str) -> Optional[str]:
 
 def _extract_year(text: str) -> Optional[str]:
     """Extract publication year from citation text."""
-    years = re.findall(r"\b(19\d{2}|20\d{2})\b", text)
+    text_wo_urls = re.sub(r"\\url\{[^}]+\}", " ", text)
+    text_wo_urls = re.sub(r"https?://[^\s\}]+", " ", text_wo_urls)
+    text_wo_dois = re.sub(
+        r"(?:doi:\s*)?10\.\d{4,9}/[^\s\}\],;]+",
+        " ",
+        text_wo_urls,
+        flags=re.IGNORECASE,
+    )
+    years_in_parentheses = re.findall(r"\((19\d{2}|20\d{2})\)", text_wo_dois)
+    if years_in_parentheses:
+        return years_in_parentheses[-1]
+    years = re.findall(r"\b(19\d{2}|20\d{2})\b", text_wo_dois)
     return years[-1] if years else None
 
 
@@ -619,7 +647,13 @@ def _extract_authors(text: str, title: Optional[str]) -> List[str]:
     if not prefix:
         return []
     prefix = prefix.replace(" and ", ", ")
-    return [a.strip() for a in prefix.split(",") if a.strip()]
+    parts = [a.strip() for a in prefix.split(",") if a.strip()]
+    # LaTeX bibliographies often encode authors as "Family, Given, Family, Given".
+    if len(parts) >= 2 and len(parts) % 2 == 0:
+        paired = [f"{parts[i]}, {parts[i + 1]}" for i in range(0, len(parts), 2)]
+        if paired:
+            return paired
+    return parts
 
 
 def _extract_journal(text: str, title: Optional[str]) -> Optional[str]:
@@ -741,7 +775,7 @@ def main() -> None:
     checker = CrossrefChecker(email=args.email, title_match_threshold=args.title_threshold)
     results = checker.check_articles(articles)
 
-    status_counts = {"match_found": 0, "no_likely_match": 0, "no_match": 0}
+    status_counts = {"match_found": 0, "doi_conflict": 0, "no_likely_match": 0, "no_match": 0}
     for item in results:
         status = item.get("status")
         if status in status_counts:
@@ -750,6 +784,7 @@ def main() -> None:
     print(
         "[crossref-checker] Summary: "
         f"match_found={status_counts['match_found']}, "
+        f"doi_conflict={status_counts['doi_conflict']}, "
         f"no_likely_match={status_counts['no_likely_match']}, "
         f"no_match={status_counts['no_match']}"
     )
