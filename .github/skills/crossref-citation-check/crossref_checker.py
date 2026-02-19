@@ -736,13 +736,29 @@ def main() -> None:
     if not articles:
         raise ValueError("No parseable citations found in input.")
 
+    print(f"[crossref-checker] Input: {args.input}")
+    print(f"[crossref-checker] Parsed citations: {len(articles)}")
     checker = CrossrefChecker(email=args.email, title_match_threshold=args.title_threshold)
     results = checker.check_articles(articles)
+
+    status_counts = {"match_found": 0, "no_likely_match": 0, "no_match": 0}
+    for item in results:
+        status = item.get("status")
+        if status in status_counts:
+            status_counts[status] += 1
+
+    print(
+        "[crossref-checker] Summary: "
+        f"match_found={status_counts['match_found']}, "
+        f"no_likely_match={status_counts['no_likely_match']}, "
+        f"no_match={status_counts['no_match']}"
+    )
 
     # Write or print the results
     if args.output:
         with open(args.output, "w", encoding="utf-8") as out:
             json.dump(results, out, indent=2, ensure_ascii=False)
+        print(f"[crossref-checker] Output written: {args.output}")
     else:
         print(json.dumps(results, indent=2, ensure_ascii=False))
 
