@@ -1,12 +1,7 @@
 ---
 name: crossref-citation-check
-description: >-
-  Validate bibliography information (authors, title, journal, volume, issue,
-  pages, year, URL, DOI) against Crossref and report mismatches with
-  corrections.
-argument-hint: >-
-  Path to citations input (JSON, CSV, TXT/MD free text, or LaTeX .tex/.bib)
-  or a structured list of citation objects.
+description: Validate bibliography information (authors, title, journal, volume, issue, pages, year, URL, DOI) against Crossref and report mismatches with corrections.
+argument-hint: Path to citations input (JSON, CSV, TXT/MD free text, or LaTeX .tex/.bib) or a structured list of citation objects.
 user-invokable: true
 ---
 # Crossref Citation Check Skill
