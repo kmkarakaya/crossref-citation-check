@@ -2,16 +2,15 @@
   {
     "citation_id": "paper:1",
     "source_format": "txt",
-    "status": "corrected",
+    "status": "critical_mismatch",
     "matched_by": "doi",
     "confidence": {
       "title_score": 1.0
     },
     "field_assessment": {
       "authors": {
-        "state": "correct",
+        "state": "missing",
         "provided": [
-          "Halil Savuran",
           "Murat Karakaya"
         ],
         "crossref": [
@@ -19,16 +18,18 @@
           "Murat Karakaya"
         ],
         "critical": true,
-        "match": true,
-        "missing_from_provided": [],
+        "match": false,
+        "missing_from_provided": [
+          "Halil Savuran"
+        ],
         "extra_in_provided": []
       },
       "title": {
-        "state": "correct",
-        "provided": "A novel solution for routing a swarm of drones operated on a mobile host",
+        "state": "conflict",
+        "provided": "routing a swarm of drones operated on a mobile host",
         "crossref": "A novel solution for routing a swarm of drones operated on a mobile host",
         "critical": true,
-        "match": true
+        "match": false
       },
       "journal": {
         "state": "correct",
@@ -82,6 +83,11 @@
     },
     "correction_patch": {
       "set": {
+        "authors": [
+          "Halil Savuran",
+          "Murat Karakaya"
+        ],
+        "title": "A novel solution for routing a swarm of drones operated on a mobile host",
         "volume": "138",
         "pages": "109337"
       },
@@ -92,14 +98,14 @@
       "text": "Halil Savuran, Murat Karakaya: \"A novel solution for routing a swarm of drones operated on a mobile host.\". '' Engineering Applications of Artificial Intelligence 138, 109337 (2024), 138, 109337 (2024). doi:10.1016/j.engappai.2024.109337. https://doi.org/10.1016/j.engappai.2024.109337."
     },
     "required_user_inputs": [],
+    "error": "Critical mismatch in one or more required fields",
     "article": {
       "citation_id": "paper:1",
       "source_format": "txt",
-      "raw_record": "\\bibitem{paper:1}\nHalil Savuran and Murat Karakaya: ``A novel solution for routing a swarm of drones operated on a mobile host.''\nEngineering Applications of Artificial Intelligence 138, 109337 (2024).\n\\url{https://doi.org/10.1016/j.engappai.2024.109337}",
+      "raw_record": "\\bibitem{paper:1}\nMurat Karakaya: ``routing a swarm of drones operated on a mobile host.''\nEngineering Applications of Artificial Intelligence 138, 109337 (2024).\n\\url{https://doi.org/10.1016/j.engappai.2024.109337}",
       "bibitem_key": "paper:1",
-      "title": "A novel solution for routing a swarm of drones operated on a mobile host",
+      "title": "routing a swarm of drones operated on a mobile host",
       "authors": [
-        "Halil Savuran",
         "Murat Karakaya"
       ],
       "journal": "'' Engineering Applications of Artificial Intelligence 138, 109337 (2024)",
@@ -123,7 +129,7 @@
       "authors": {
         "state": "conflict",
         "provided": [
-          "Gökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli,",
+          "Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli,",
           "Robertas Damaševičius"
         ],
         "crossref": [
@@ -142,15 +148,15 @@
           "Gökhan Şengül"
         ],
         "extra_in_provided": [
-          "Gökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli,"
+          "Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli,"
         ]
       },
       "title": {
-        "state": "correct",
-        "provided": "Deep learning based fall detection using smartwatches for healthcare applications",
+        "state": "conflict",
+        "provided": "fall detection using smartwatches for healthcare applications",
         "crossref": "Deep learning based fall detection using smartwatches for healthcare applications",
         "critical": true,
-        "match": true
+        "match": false
       },
       "journal": {
         "state": "correct",
@@ -211,6 +217,7 @@
           "Olusola O. Abayomi-Alli",
           "Robertas Damaševičius"
         ],
+        "title": "Deep learning based fall detection using smartwatches for healthcare applications",
         "volume": "71",
         "pages": "103242"
       },
@@ -225,11 +232,11 @@
     "article": {
       "citation_id": "paper:2",
       "source_format": "txt",
-      "raw_record": "\\bibitem{paper:2}\nGökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli, and Robertas Damaševičius:\n``Deep learning based fall detection using smartwatches for healthcare applications.''\nBiomedical Signal Processing and Control 71, 103242 (2022).\n\\url{https://doi.org/10.1016/j.bspc.2021.103242}",
+      "raw_record": "\\bibitem{paper:2}\n Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli, and Robertas Damaševičius:\n``fall detection using smartwatches for healthcare applications.''\nBiomedical Signal Processing and Control 71, 103242 (2022).\n\\url{https://doi.org/10.1016/j.bspc.2021.103242}",
       "bibitem_key": "paper:2",
-      "title": "Deep learning based fall detection using smartwatches for healthcare applications",
+      "title": "fall detection using smartwatches for healthcare applications",
       "authors": [
-        "Gökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli,",
+        "Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli,",
         "Robertas Damaševičius"
       ],
       "journal": "'' Biomedical Signal Processing and Control 71, 103242 (2022)",
@@ -251,9 +258,8 @@
     },
     "field_assessment": {
       "authors": {
-        "state": "correct",
+        "state": "missing",
         "provided": [
-          "Tolga Üstünkök",
           "Murat Karakaya"
         ],
         "crossref": [
@@ -261,8 +267,10 @@
           "Murat Karakaya"
         ],
         "critical": true,
-        "match": true,
-        "missing_from_provided": [],
+        "match": false,
+        "missing_from_provided": [
+          "Tolga Üstünkök"
+        ],
         "extra_in_provided": []
       },
       "title": {
@@ -324,6 +332,10 @@
     },
     "correction_patch": {
       "set": {
+        "authors": [
+          "Tolga Üstünkök",
+          "Murat Karakaya"
+        ],
         "volume": "15",
         "issue": "03"
       },
@@ -337,11 +349,10 @@
     "article": {
       "citation_id": "paper:3",
       "source_format": "txt",
-      "raw_record": "\\bibitem{paper:3}\nTolga Üstünkök and Murat Karakaya: ``SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images.''\nJournal of Applied Remote Sensing 15(03), 036509 (2021).\n\\url{https://doi.org/10.1117/1.jrs.15.036509}",
+      "raw_record": "\\bibitem{paper:3}\nMurat Karakaya: ``SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images.''\nJournal of Applied Remote Sensing 15(03), 036509 (2021).\n\\url{https://doi.org/10.1117/1.jrs.15.036509}",
       "bibitem_key": "paper:3",
       "title": "SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images",
       "authors": [
-        "Tolga Üstünkök",
         "Murat Karakaya"
       ],
       "journal": "'' Journal of Applied Remote Sensing 15(03), 036509 (2021)",
@@ -465,33 +476,34 @@
   {
     "citation_id": "paper:5",
     "source_format": "txt",
-    "status": "corrected",
+    "status": "critical_mismatch",
     "matched_by": "doi",
     "confidence": {
       "title_score": 1.0
     },
     "field_assessment": {
       "authors": {
-        "state": "correct",
+        "state": "missing",
         "provided": [
-          "Halil Savuran",
-          "Murat Karakaya"
+          "Halil Savuran"
         ],
         "crossref": [
           "Halil Savuran",
           "Murat Karakaya"
         ],
         "critical": true,
-        "match": true,
-        "missing_from_provided": [],
+        "match": false,
+        "missing_from_provided": [
+          "Murat Karakaya"
+        ],
         "extra_in_provided": []
       },
       "title": {
-        "state": "correct",
-        "provided": "Efficient route planning for an unmanned air vehicle deployed on a moving carrier",
+        "state": "conflict",
+        "provided": "Efficient route planning",
         "crossref": "Efficient route planning for an unmanned air vehicle deployed on a moving carrier",
         "critical": true,
-        "match": true
+        "match": false
       },
       "journal": {
         "state": "correct",
@@ -545,6 +557,11 @@
     },
     "correction_patch": {
       "set": {
+        "authors": [
+          "Halil Savuran",
+          "Murat Karakaya"
+        ],
+        "title": "Efficient route planning for an unmanned air vehicle deployed on a moving carrier",
         "volume": "20",
         "issue": "7",
         "pages": "2905-2920"
@@ -556,15 +573,15 @@
       "text": "Halil Savuran, Murat Karakaya: \"Efficient route planning for an unmanned air vehicle deployed on a moving carrier.\". '' Soft Computing 20(7), 2905--2920 (2016), 20(7), 2905-2920 (2016). doi:10.1007/s00500-015-1970-4. https://doi.org/10.1007/s00500-015-1970-4."
     },
     "required_user_inputs": [],
+    "error": "Critical mismatch in one or more required fields",
     "article": {
       "citation_id": "paper:5",
       "source_format": "txt",
-      "raw_record": "\\bibitem{paper:5}\nHalil Savuran and Murat Karakaya: ``Efficient route planning for an unmanned air vehicle deployed on a moving carrier.''\nSoft Computing 20(7), 2905--2920 (2016).\n\\url{https://doi.org/10.1007/s00500-015-1970-4}",
+      "raw_record": "\\bibitem{paper:5}\nHalil Savuran: ``Efficient route planning ''\nSoft Computing 20(7), 2905--2920 (2016).\n\\url{https://doi.org/10.1007/s00500-015-1970-4}",
       "bibitem_key": "paper:5",
-      "title": "Efficient route planning for an unmanned air vehicle deployed on a moving carrier",
+      "title": "Efficient route planning",
       "authors": [
-        "Halil Savuran",
-        "Murat Karakaya"
+        "Halil Savuran"
       ],
       "journal": "'' Soft Computing 20(7), 2905--2920 (2016)",
       "volume": null,
@@ -578,7 +595,7 @@
   {
     "citation_id": "paper:6",
     "source_format": "txt",
-    "status": "corrected",
+    "status": "critical_mismatch",
     "matched_by": "doi",
     "confidence": {
       "title_score": 1.0
@@ -598,18 +615,18 @@
         ]
       },
       "title": {
-        "state": "correct",
-        "provided": "MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity",
+        "state": "conflict",
+        "provided": "An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity",
         "crossref": "MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity",
         "critical": true,
-        "match": true
+        "match": false
       },
       "journal": {
-        "state": "correct",
-        "provided": "'' KSII Transactions on Internet and Information Systems 9(9), 3396--3411 (2015)",
+        "state": "conflict",
+        "provided": "'' 9(9), 3396--3411 (2015)",
         "crossref": "KSII Transactions on Internet and Information Systems",
         "critical": true,
-        "match": true
+        "match": false
       },
       "volume": {
         "state": "missing",
@@ -656,6 +673,8 @@
     },
     "correction_patch": {
       "set": {
+        "title": "MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity",
+        "journal": "KSII Transactions on Internet and Information Systems",
         "volume": "9",
         "issue": "9"
       },
@@ -663,19 +682,20 @@
     },
     "corrected_reference": {
       "format": "txt",
-      "text": "Murat Karakaya: \"MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.\". '' KSII Transactions on Internet and Information Systems 9(9), 3396--3411 (2015), 9(9) (2015). doi:10.3837/tiis.2015.09.007. https://doi.org/10.3837/tiis.2015.09.007."
+      "text": "Murat Karakaya: \"MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.\". KSII Transactions on Internet and Information Systems, 9(9) (2015). doi:10.3837/tiis.2015.09.007. https://doi.org/10.3837/tiis.2015.09.007."
     },
     "required_user_inputs": [],
+    "error": "Critical mismatch in one or more required fields",
     "article": {
       "citation_id": "paper:6",
       "source_format": "txt",
-      "raw_record": "\\bibitem{paper:6}\nMurat Karakaya: ``MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.''\nKSII Transactions on Internet and Information Systems 9(9), 3396--3411 (2015).\n\\url{https://doi.org/10.3837/tiis.2015.09.007}",
+      "raw_record": "\\bibitem{paper:6}\nMurat Karakaya: ``An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.''\n 9(9), 3396--3411 (2015).\n\\url{https://doi.org/10.3837/tiis.2015.09.007}",
       "bibitem_key": "paper:6",
-      "title": "MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity",
+      "title": "An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity",
       "authors": [
         "Murat Karakaya"
       ],
-      "journal": "'' KSII Transactions on Internet and Information Systems 9(9), 3396--3411 (2015)",
+      "journal": "'' 9(9), 3396--3411 (2015)",
       "volume": null,
       "issue": null,
       "pages": null,
@@ -712,7 +732,7 @@
       },
       "journal": {
         "state": "correct",
-        "provided": "'' Ad Hoc \\& Sensor Wireless Networks 28(1--2), 65--82 (2015). \\end{thebibliography}",
+        "provided": "'' Ad Hoc 28(1--2), 65--82 (2015). \\end{thebibliography}",
         "crossref": null,
         "critical": true,
         "match": null
@@ -766,7 +786,7 @@
     },
     "corrected_reference": {
       "format": "txt",
-      "text": "Murat Karakaya: \"Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.\". '' Ad Hoc \\& Sensor Wireless Networks 28(1--2), 65--82 (2015). \\end{thebibliography} (2015)."
+      "text": "Murat Karakaya: \"Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.\". '' Ad Hoc 28(1--2), 65--82 (2015). \\end{thebibliography} (2015)."
     },
     "required_user_inputs": [
       "DOI"
@@ -776,13 +796,13 @@
     "article": {
       "citation_id": "paper:7",
       "source_format": "txt",
-      "raw_record": "\\bibitem{paper:7}\nMurat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.''\nAd Hoc \\& Sensor Wireless Networks 28(1--2), 65--82 (2015).\n\n\n\\end{thebibliography}",
+      "raw_record": "\\bibitem{paper:7}\nMurat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.''\nAd Hoc 28(1--2), 65--82 (2015).\n\n\n\\end{thebibliography}",
       "bibitem_key": "paper:7",
       "title": "Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks",
       "authors": [
         "Murat Karakaya"
       ],
-      "journal": "'' Ad Hoc \\& Sensor Wireless Networks 28(1--2), 65--82 (2015). \\end{thebibliography}",
+      "journal": "'' Ad Hoc 28(1--2), 65--82 (2015). \\end{thebibliography}",
       "volume": null,
       "issue": null,
       "pages": null,

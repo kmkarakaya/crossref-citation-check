@@ -1,0 +1,328 @@
+[
+  {
+    "citation_id": "txt:1",
+    "source_format": "txt",
+    "status": "unresolved",
+    "matched_by": "title",
+    "confidence": {
+      "title_score": 0.17142857142857143,
+      "candidate_rank": 2
+    },
+    "field_assessment": {
+      "authors": {
+        "state": "correct",
+        "provided": [
+          "Murat Karakaya, M. Eryilmaz,",
+          "U. O. Ceyhan"
+        ],
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "title": {
+        "state": "correct",
+        "provided": "Murat Karakaya, M",
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "journal": {
+        "state": "correct",
+        "provided": "Eryilmaz, and U. O. Ceyhan",
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "volume": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "issue": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "pages": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "year": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "doi": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "url": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      }
+    },
+    "correction_patch": {
+      "set": {},
+      "unset": []
+    },
+    "corrected_reference": {
+      "format": "txt",
+      "text": "Murat Karakaya, M. Eryilmaz,, U. O. Ceyhan: \"Murat Karakaya, M.\". Eryilmaz, and U. O. Ceyhan."
+    },
+    "required_user_inputs": [
+      "DOI",
+      "publication year"
+    ],
+    "error": "Top title candidate is below confidence threshold",
+    "candidate_title": "İbn Rüşd Felsefesinde Kötülük",
+    "article": {
+      "citation_id": "txt:1",
+      "source_format": "txt",
+      "raw_record": "Murat Karakaya, M. Eryilmaz, and U. O. Ceyhan:",
+      "bibitem_key": null,
+      "title": "Murat Karakaya, M",
+      "authors": [
+        "Murat Karakaya, M. Eryilmaz,",
+        "U. O. Ceyhan"
+      ],
+      "journal": "Eryilmaz, and U. O. Ceyhan",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "year": null,
+      "doi": null,
+      "url": null
+    }
+  },
+  {
+    "citation_id": "txt:2",
+    "source_format": "txt",
+    "status": "unresolved",
+    "matched_by": "title",
+    "confidence": {
+      "title_score": 0.45255474452554745,
+      "candidate_rank": 4
+    },
+    "field_assessment": {
+      "authors": {
+        "state": "correct",
+        "provided": [
+          "``"
+        ],
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "title": {
+        "state": "correct",
+        "provided": "Analyzing students' Academic Success in Prerequisite Course Chains",
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "journal": {
+        "state": "correct",
+        "provided": "''",
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "volume": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "issue": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "pages": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "year": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "doi": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "url": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      }
+    },
+    "correction_patch": {
+      "set": {},
+      "unset": []
+    },
+    "corrected_reference": {
+      "format": "txt",
+      "text": "``: \"Analyzing students' Academic Success in Prerequisite Course Chains.\". ''."
+    },
+    "required_user_inputs": [
+      "DOI",
+      "publication year"
+    ],
+    "error": "Top title candidate is below confidence threshold",
+    "candidate_title": "ANALYZING NEEDS OF ONLINE-BASED EFL ACADEMIC WRITING COURSE: STUDENTS’ VOICES IN COURSE DESIGN",
+    "article": {
+      "citation_id": "txt:2",
+      "source_format": "txt",
+      "raw_record": "``Analyzing students' Academic Success in Prerequisite Course Chains:''",
+      "bibitem_key": null,
+      "title": "Analyzing students' Academic Success in Prerequisite Course Chains",
+      "authors": [
+        "``"
+      ],
+      "journal": "''",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "year": null,
+      "doi": null,
+      "url": null
+    }
+  },
+  {
+    "citation_id": "txt:3",
+    "source_format": "txt",
+    "status": "unresolved",
+    "matched_by": "title",
+    "confidence": {
+      "title_score": 0.345679012345679,
+      "candidate_rank": 1
+    },
+    "field_assessment": {
+      "authors": {
+        "state": "correct",
+        "provided": [
+          "International Journal of Engineering Education 34(2A), 364--370 (2018)"
+        ],
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "title": {
+        "state": "correct",
+        "provided": "International Journal of Engineering Education 34(2A), 364--370 (2018)",
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "journal": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "volume": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "issue": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "pages": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      },
+      "year": {
+        "state": "correct",
+        "provided": "2018",
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "doi": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": true,
+        "match": null
+      },
+      "url": {
+        "state": "missing",
+        "provided": null,
+        "crossref": null,
+        "critical": false,
+        "match": null
+      }
+    },
+    "correction_patch": {
+      "set": {},
+      "unset": []
+    },
+    "corrected_reference": {
+      "format": "txt",
+      "text": "International Journal of Engineering Education 34(2A), 364--370 (2018): \"International Journal of Engineering Education 34(2A), 364--370 (2018).\". [missing journal] (2018)."
+    },
+    "required_user_inputs": [
+      "DOI",
+      "venue/journal name"
+    ],
+    "error": "Top title candidate is below confidence threshold",
+    "candidate_title": "Religious education in Sudan",
+    "article": {
+      "citation_id": "txt:3",
+      "source_format": "txt",
+      "raw_record": "International Journal of Engineering Education 34(2A), 364--370 (2018).",
+      "bibitem_key": null,
+      "title": "International Journal of Engineering Education 34(2A), 364--370 (2018)",
+      "authors": [
+        "International Journal of Engineering Education 34(2A), 364--370 (2018)"
+      ],
+      "journal": null,
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "year": "2018",
+      "doi": null,
+      "url": null
+    }
+  }
+]

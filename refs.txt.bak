@@ -1,0 +1,47 @@
+\begin{thebibliography}{7}
+%
+
+\bibitem{paper:1}
+Murat Karakaya: ``routing a swarm of drones operated on a mobile host.''
+Engineering Applications of Artificial Intelligence 138, 109337 (2024).
+\url{https://doi.org/10.1016/j.engappai.2024.109337}
+
+\bibitem{paper:2}
+ Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli, and Robertas Damaševičius:
+``fall detection using smartwatches for healthcare applications.''
+Biomedical Signal Processing and Control 71, 103242 (2022).
+\url{https://doi.org/10.1016/j.bspc.2021.103242}
+
+
+\bibitem{paper:3}
+Murat Karakaya: ``SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images.''
+Journal of Applied Remote Sensing 15(03), 036509 (2021).
+\url{https://doi.org/10.1117/1.jrs.15.036509}
+
+
+
+\bibitem{paper:4}
+Murat Karakaya, M. Eryilmaz, and U. O. Ceyhan:
+``Analyzing students' Academic Success in Prerequisite Course Chains''
+International Journal of Engineering Education 34(2A), 364--370 (2018).
+
+
+
+\bibitem{paper:5}
+Halil Savuran: ``Efficient route planning ''
+Soft Computing 20(7), 2905--2920 (2016).
+\url{https://doi.org/10.1007/s00500-015-1970-4}
+
+
+\bibitem{paper:6}
+Murat Karakaya: ``An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.''
+ 9(9), 3396--3411 (2015).
+\url{https://doi.org/10.3837/tiis.2015.09.007}
+
+
+\bibitem{paper:7}
+Murat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.''
+Ad Hoc 28(1--2), 65--82 (2015).
+
+
+\end{thebibliography}
