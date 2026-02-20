@@ -1,15 +1,19 @@
 ---
 name: crossref-citation-check
-description: Validate bibliography information (authors, title, journal, volume, issue, pages, year, URL, DOI) against Crossref and report mismatches with corrections.
-argument-hint: Path to citations input (JSON, CSV, TXT/MD free text, or LaTeX .tex/.bib) or a structured list of citation objects.
+description: >-
+  Validate citations against Crossref with strict field-level misinformation
+  detection and correction-ready output.
+argument-hint: >-
+  Path to citations input (JSON, CSV, TXT/MD free text, or LaTeX .tex/.bib)
+  or a structured list of citation objects.
 user-invokable: true
 ---
-# Crossref Citation Check Skill
+# Crossref Citation Check Skill (v2)
 
 ## Purpose
 
-Use Crossref metadata to validate references and provide correction-ready
-mismatch reports.
+Assume any reference field can be incorrect or missing, validate against
+Crossref, and return correction-ready output.
 
 ## Supported Inputs
 
@@ -22,15 +26,16 @@ mismatch reports.
 
 When this skill is selected:
 
-1. Must use the helper script in this folder:
+1. Must use local helper script in this folder:
    - `crossref_checker.py`
-2. If the script fails use ad-hoc manual API parsing.
-3. If input is free text or LaTeX, pass it directly to the script (no manual
-   pre-conversion required).
-4. Report:
-   - citation-level `status` (`match_found`, `no_likely_match`, `no_match`)
-   - field-level differences (`provided`, `crossref`, `match`)
-   - concrete corrected metadata values for mismatches
+2. Script-first policy:
+   - Always run script first.
+   - Only use manual API fallback if script execution fails.
+3. For text/LaTeX inputs, pass the file directly to the script.
+4. Final response must include execution evidence:
+   - exact command used
+   - output file path
+   - short summary/preview from output
 
 ## Script Usage
 
@@ -39,32 +44,71 @@ When this skill is selected:
 - `python crossref_checker.py -i refs.tex -o results.json`
 - `python crossref_checker.py -i refs.txt -o results.json`
 - `python crossref_checker.py -i refs.md --title-threshold 0.90`
+- `python crossref_checker.py -i refs.txt --critical-fields title,doi,authors,journal,year`
+- `python crossref_checker.py -i refs.txt --emit-corrected-reference true`
 
-## Matching/Validation Rules (Implemented)
+## Output Contract (v2)
 
-- DOI lookup is preferred and DOI values are normalized (`doi:...`,
-  `https://doi.org/...`, case/punctuation cleanup).
-- Title lookup is confidence-gated:
-  - searches multiple candidates
-  - rejects low-confidence matches as `no_likely_match`
-- Author comparison is tolerant to initials/full-name variation.
-- Journal comparison tolerates abbreviations/punctuation differences.
-- Missing provided fields are represented as `match: null` (unknown), not false.
+Each citation result must include:
 
-## Output Contract
+- `citation_id`
+- `source_format` (`json` | `csv` | `txt` | `md` | `tex` | `bib`)
+- `status` (`match_found` | `corrected` | `critical_mismatch` | `unresolved`)
+- `matched_by` (`doi` | `title` | `none`)
+- `confidence` (`title_score`, optional `candidate_rank`)
+- `field_assessment` (per-field assessment object)
+- `correction_patch` (`set`, `unset`)
+- `corrected_reference` (`format`, `text`)
+- `required_user_inputs` (for unresolved entries)
+- `error` (when applicable)
 
-The script returns JSON entries with:
+### Field Assessment States
 
-- `article`: original parsed citation fields
-- `status`: `match_found` | `no_likely_match` | `no_match`
-- `matched_by`: `doi` | `title` (when available)
-- `title_score`: confidence score (when available)
-- `comparison` for `match_found`, including field-level details
-- `error` for non-matches
+- `correct`
+- `missing`
+- `incorrect`
+- `conflict`
+
+### Critical Field Policy
+
+Default critical fields:
+
+- `title`
+- `doi`
+- `authors`
+- `journal`
+- `year`
+
+If any critical field state is `conflict`, status must be `critical_mismatch`.
+
+## Matching and Resolution Rules
+
+- DOI lookup first when DOI exists.
+- If DOI lookup fails and title exists, use title search with threshold.
+- If no reliable match, return `unresolved` and required disambiguation inputs.
+- Missing/incorrect fields in resolvable matches must produce `correction_patch`.
 
 ## Notes
 
-- Use a polite `User-Agent` with contact email (`-e`) when possible.
-- Respect rate limits and avoid high-frequency polling.
-- If Crossref has no reliable match, clearly mark as unresolved and request
-  additional disambiguating details (DOI, full title, author list).
+- Use `-e` email when possible for polite API usage.
+- Respect rate limits.
+- Crossref remains authority for suggested corrected values.
+
+## Reusable Enforcement Prompt Block
+
+```text
+Use $crossref-citation-check on <INPUT_FILE>.
+
+Hard constraints:
+1) You MUST run:
+   python <SKILL_DIR>/crossref_checker.py -i <INPUT_FILE> -o <OUTPUT_FILE>
+2) You MUST NOT call Crossref API directly unless this command fails.
+3) If command fails, stop and report:
+   - exact command attempted
+   - exact error message
+4) Before final answer, provide execution evidence:
+   - exact command run
+   - output file path
+   - short preview/summary from <OUTPUT_FILE>
+5) Return field-level corrections for incorrect/missing values.
+```
