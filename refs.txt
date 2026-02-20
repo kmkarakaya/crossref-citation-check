@@ -1,34 +1,7 @@
-```plaintext
-\begin{thebibliography}{7}
-%
-
-\bibitem{paper:1}
 Halil Savuran, Murat Karakaya: "A novel solution for routing a swarm of drones operated on a mobile host.". '' Engineering Applications of Artificial Intelligence 138, 109337 (2024), 138, 109337 (2024). doi:10.1016/j.engappai.2024.109337. https://doi.org/10.1016/j.engappai.2024.109337
-
-\bibitem{paper:2}
 Gökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli, Robertas Damaševičius: "Deep learning based fall detection using smartwatches for healthcare applications.". '' Biomedical Signal Processing and Control 71, 103242 (2022), 71, 103242 (2022). doi:10.1016/j.bspc.2021.103242. https://doi.org/10.1016/j.bspc.2021.103242
-
-\bibitem{paper:3}
 Tolga Üstünkök, Murat Karakaya: "SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images.". '' Journal of Applied Remote Sensing 15(03), 036509 (2021), 15(03) (2021). doi:10.1117/1.jrs.15.036509. https://doi.org/10.1117/1.jrs.15.036509
-
-
-\bibitem{paper:4}
-Murat Karakaya, M. Eryilmaz, and U. O. Ceyhan:
-``Analyzing students' Academic Success in Prerequisite Course Chains''
-International Journal of Engineering Education 34(2A), 364--370 (2018).
-
-
-\bibitem{paper:5}
+Murat Karakaya, M. Eryilmaz, and U. O. Ceyhan:``Analyzing students' Academic Success in Prerequisite Course Chains''International Journal of Engineering Education 34(2A), 364--370 (2018).
 Halil Savuran, Murat Karakaya: "Efficient route planning for an unmanned air vehicle deployed on a moving carrier.". '' Soft Computing 20(7), 2905--2920 (2016), 20(7), 2905-2920 (2016). doi:10.1007/s00500-015-1970-4. https://doi.org/10.1007/s00500-015-1970-4
-
-\bibitem{paper:6}
 Murat Karakaya: "MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.". KSII Transactions on Internet and Information Systems, 9(9) (2015). doi:10.3837/tiis.2015.09.007. https://doi.org/10.3837/tiis.2015.09.007
-
-\bibitem{paper:7}
-Murat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.''
-Ad Hoc 28(1--2), 65--82 (2015).
-
-
-\end{thebibliography}
-
-```
+Murat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.'' Ad Hoc 28(1--2), 65--82 (2015).
