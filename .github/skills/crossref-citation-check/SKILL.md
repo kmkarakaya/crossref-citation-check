@@ -2,24 +2,23 @@
 name: crossref-citation-check
 description: >-
   Validate citations against Crossref with strict field-level misinformation
-  detection and correction-ready output.
+  detection, multi-candidate DOI recovery, and correction-ready output.
 argument-hint: >-
-  Path to citations input (JSON, CSV, TXT/MD free text, or LaTeX .tex/.bib)
-  or a structured list of citation objects.
+  Path to references input in plain text (`.txt`) or LaTeX bibliography
+  (`.tex`/`.bib`).
 user-invokable: true
 ---
-# Crossref Citation Check Skill (v2)
+# Crossref Citation Check Skill (v2.1)
 
 ## Purpose
 
-Assume any reference field can be incorrect or missing, validate against
-Crossref, and return correction-ready output.
+Validate references assuming any field can be incorrect or missing.
+If DOI is missing or suspect, recover candidate DOIs via ranked multi-candidate
+search, and support user-guided final selection.
 
 ## Supported Inputs
 
-- JSON citation arrays
-- CSV with citation columns
-- Free-text citation blocks (`.txt`, `.md`)
+- Plain-text references (`.txt`)
 - LaTeX bibliography files (`.tex`, `.bib`, including `\bibitem{...}`)
 
 ## Required Invocation Behavior
@@ -31,7 +30,10 @@ When this skill is selected:
 2. Script-first policy:
    - Always run script first.
    - Only use manual API fallback if script execution fails.
-3. For text/LaTeX inputs, pass the file directly to the script.
+3. If any result has `selection_required=true`:
+   - present top candidates (rank/title/authors/journal/year/DOI/composite score)
+   - ask user to pick rank per `citation_id` (or confirm recommendation)
+   - rerun script with `--selection-map`
 4. Final response must include execution evidence:
    - exact command used
    - output file path
@@ -39,54 +41,66 @@ When this skill is selected:
 
 ## Script Usage
 
-- `python crossref_checker.py -i citations.json`
-- `python crossref_checker.py -i citations.csv -o results.json`
-- `python crossref_checker.py -i refs.tex -o results.json`
-- `python crossref_checker.py -i refs.txt -o results.json`
-- `python crossref_checker.py -i refs.md --title-threshold 0.90`
-- `python crossref_checker.py -i refs.txt --critical-fields title,doi,authors,journal,year`
-- `python crossref_checker.py -i refs.txt --emit-corrected-reference true`
+- First pass:
+  - `python crossref_checker.py -i refs.txt -o refs_results.json`
+  - `python crossref_checker.py -i bib.tex -o bib_results.json`
+- Advanced v2.1 controls:
+  - `python crossref_checker.py -i refs.txt --candidate-rows 6`
+  - `python crossref_checker.py -i refs.txt --auto-accept-threshold 0.88 --ambiguity-gap-threshold 0.06`
+  - `python crossref_checker.py -i refs.txt --shortlist-trigger missing_or_conflict`
+- Apply user selections:
+  - `python crossref_checker.py -i refs.txt --selection-map selection_map.json -o refs_results_final.json`
+  - `selection_map.json` example: `{"paper:4": 2, "paper:7": 1}`
 
-## Output Contract (v2)
+## Output Contract (v2.1, v2-compatible extension)
 
-Each citation result must include:
+Each citation result includes existing v2 fields plus shortlist/selection
+fields:
 
 - `citation_id`
-- `source_format` (`json` | `csv` | `txt` | `md` | `tex` | `bib`)
+- `source_format`
 - `status` (`match_found` | `corrected` | `critical_mismatch` | `unresolved`)
 - `matched_by` (`doi` | `title` | `none`)
-- `confidence` (`title_score`, optional `candidate_rank`)
-- `field_assessment` (per-field assessment object)
+- `confidence`
+- `field_assessment`
 - `correction_patch` (`set`, `unset`)
-- `corrected_reference` (`format`, `text`)
-- `required_user_inputs` (for unresolved entries)
+- `corrected_reference`
+- `required_user_inputs`
 - `error` (when applicable)
 
-### Field Assessment States
+Additional v2.1 fields:
 
-- `correct`
-- `missing`
-- `incorrect`
-- `conflict`
-
-### Critical Field Policy
-
-Default critical fields:
-
-- `title`
-- `doi`
-- `authors`
-- `journal`
-- `year`
-
-If any critical field state is `conflict`, status must be `critical_mismatch`.
+- `candidate_matches` (0..N):
+  - `rank`
+  - `composite_score`
+  - `component_scores` (`title`, `authors`, `journal`, `year`)
+  - `doi`, `title`, `authors`, `journal`, `year`, `volume`, `issue`, `pages`, `url`
+  - `matched_by_query` (`bibliographic`, `title`, `author_title`)
+- `recommended_candidate_rank`
+- `selection_required`
+- `selection_reason` (`ambiguous_top2`, `low_confidence`, `doi_conflict_review`, `none`)
+- `selected_candidate_rank`
+- `doi_conflict`
 
 ## Matching and Resolution Rules
 
 - DOI lookup first when DOI exists.
-- If DOI lookup fails and title exists, use title search with threshold.
-- If no reliable match, return `unresolved` and required disambiguation inputs.
-- Missing/incorrect fields in resolvable matches must produce `correction_patch`.
+- Shortlist trigger defaults to `missing_or_conflict`.
+- Candidate retrieval uses up to 3 query types:
+  - `query.bibliographic` (title + first 2 authors + journal + year)
+  - `query.title`
+  - `query.author` + `query.title`
+- Deduplicate candidates by DOI (fallback: normalized title+year).
+- Composite rank uses weighted score:
+  - title `0.55`
+  - authors `0.30`
+  - journal `0.10`
+  - year `0.05`
+- Auto-accept top candidate only if:
+  - `top_score >= auto_accept_threshold`
+  - `top_minus_second >= ambiguity_gap_threshold`
+  - no DOI-conflict review requirement
+- Otherwise require user selection.
 
 ## Notes
 
@@ -100,15 +114,14 @@ If any critical field state is `conflict`, status must be `critical_mismatch`.
 Use $crossref-citation-check on <INPUT_FILE>.
 
 Hard constraints:
-1) You MUST run:
+1) MUST run:
    python <SKILL_DIR>/crossref_checker.py -i <INPUT_FILE> -o <OUTPUT_FILE>
-2) You MUST NOT call Crossref API directly unless this command fails.
-3) If command fails, stop and report:
-   - exact command attempted
-   - exact error message
+2) MUST NOT call Crossref API directly unless this command fails.
+3) If output contains selection_required=true:
+   - ask user for candidate rank by citation_id
+   - rerun with --selection-map
 4) Before final answer, provide execution evidence:
    - exact command run
-   - output file path
-   - short preview/summary from <OUTPUT_FILE>
-5) Return field-level corrections for incorrect/missing values.
+   - output path
+   - short summary from output
 ```

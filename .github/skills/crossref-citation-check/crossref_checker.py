@@ -24,6 +24,11 @@ import requests
 ALL_FIELDS = ("authors", "title", "journal", "volume", "issue", "pages", "year", "doi", "url")
 DEFAULT_CRITICAL_FIELDS = ("title", "doi", "authors", "journal", "year")
 SUPPORTED_SOURCE_FORMATS = {"json", "csv", "txt", "md", "tex", "bib"}
+DEFAULT_CANDIDATE_ROWS = 6
+DEFAULT_AUTO_ACCEPT_THRESHOLD = 0.88
+DEFAULT_AMBIGUITY_GAP_THRESHOLD = 0.06
+SHORTLIST_TRIGGERS = {"missing_or_conflict", "missing_only", "all"}
+DEFAULT_SHORTLIST_TRIGGER = "missing_or_conflict"
 
 
 @dataclass
@@ -58,7 +63,7 @@ class Article:
 
 class CrossrefChecker:
     BASE_URL = "https://api.crossref.org/works"
-    SEARCH_ROWS = 5
+    SEARCH_ROWS = DEFAULT_CANDIDATE_ROWS
     DEFAULT_TITLE_MATCH_THRESHOLD = 0.85
 
     def __init__(
@@ -68,6 +73,11 @@ class CrossrefChecker:
         critical_fields: Optional[List[str]] = None,
         emit_corrected_reference: bool = True,
         schema_version: str = "v2",
+        candidate_rows: int = DEFAULT_CANDIDATE_ROWS,
+        auto_accept_threshold: float = DEFAULT_AUTO_ACCEPT_THRESHOLD,
+        ambiguity_gap_threshold: float = DEFAULT_AMBIGUITY_GAP_THRESHOLD,
+        shortlist_trigger: str = DEFAULT_SHORTLIST_TRIGGER,
+        selection_map: Optional[Dict[str, int]] = None,
     ) -> None:
         user_agent = "CrossrefCitationChecker/2.0"
         if email:
@@ -78,6 +88,11 @@ class CrossrefChecker:
         self.critical_fields = set(critical_fields or list(DEFAULT_CRITICAL_FIELDS))
         self.emit_corrected_reference = emit_corrected_reference
         self.schema_version = schema_version
+        self.candidate_rows = max(1, int(candidate_rows))
+        self.auto_accept_threshold = float(auto_accept_threshold)
+        self.ambiguity_gap_threshold = float(ambiguity_gap_threshold)
+        self.shortlist_trigger = shortlist_trigger if shortlist_trigger in SHORTLIST_TRIGGERS else DEFAULT_SHORTLIST_TRIGGER
+        self.selection_map = selection_map or {}
 
     @staticmethod
     def _is_missing(value: Any) -> bool:
@@ -176,6 +191,169 @@ class CrossrefChecker:
                     continue
                 return None
         return None
+
+    @staticmethod
+    def _first_n_authors(authors: List[str], n: int = 2) -> str:
+        if not authors:
+            return ""
+        return " ".join(a for a in authors[:n] if a)
+
+    def _build_bibliographic_query(self, article: Article) -> str:
+        pieces: List[str] = []
+        if article.title:
+            pieces.append(article.title)
+        author_snippet = self._first_n_authors(article.authors, 2)
+        if author_snippet:
+            pieces.append(author_snippet)
+        if article.journal:
+            pieces.append(article.journal)
+        if article.year:
+            pieces.append(str(article.year))
+        return " ".join(pieces).strip()
+
+    def _query_candidates(self, params: Dict[str, Any], matched_by_query: str) -> List[Dict[str, Any]]:
+        payload = {**params, "rows": self.candidate_rows}
+        response = self._request_with_retry(self.BASE_URL, params=payload)
+        if not response:
+            return []
+        data = response.json()
+        items = data.get("message", {}).get("items", [])
+        candidates: List[Dict[str, Any]] = []
+        for item in items:
+            candidates.append(
+                {
+                    "metadata": item,
+                    "matched_by_query": matched_by_query,
+                    "query_score": float(item.get("score") or 0.0),
+                }
+            )
+        return candidates
+
+    def _candidate_uid(self, item: Dict[str, Any]) -> str:
+        doi = self._normalise_doi(item.get("DOI"))
+        if doi:
+            return f"doi:{doi}"
+        title_raw = item.get("title")
+        if isinstance(title_raw, list) and title_raw:
+            title = title_raw[0]
+        elif isinstance(title_raw, str):
+            title = title_raw
+        else:
+            title = ""
+        year = ""
+        for date_field in ("published-print", "published-online", "published", "issued"):
+            if date_field in item:
+                date_parts = item[date_field].get("date-parts")
+                if isinstance(date_parts, list) and date_parts and date_parts[0]:
+                    year = str(date_parts[0][0])
+                    break
+        return f"title:{self._normalise_text(title) or ''}:{year}"
+
+    @staticmethod
+    def _f1_overlap(left: set, right: set) -> float:
+        if not left or not right:
+            return 0.0
+        inter = len(left.intersection(right))
+        if inter == 0:
+            return 0.0
+        precision = inter / len(right)
+        recall = inter / len(left)
+        if precision + recall == 0:
+            return 0.0
+        return (2.0 * precision * recall) / (precision + recall)
+
+    def _author_overlap_score(self, provided_authors: List[str], crossref_authors: List[str]) -> float:
+        left = {k for k in (self._author_key(a) for a in (provided_authors or [])) if k}
+        right = {k for k in (self._author_key(a) for a in (crossref_authors or [])) if k}
+        return self._f1_overlap(left, right)
+
+    def _candidate_component_scores(self, article: Article, candidate_fields: Dict[str, Any]) -> Dict[str, float]:
+        title_score = 0.0
+        if article.title and candidate_fields.get("title"):
+            title_score = self._title_similarity(article.title, candidate_fields.get("title"))
+
+        author_score = 0.0
+        if article.authors and candidate_fields.get("authors"):
+            author_score = self._author_overlap_score(article.authors, candidate_fields.get("authors") or [])
+
+        journal_score = 0.0
+        if article.journal and candidate_fields.get("journal"):
+            jm = self._journal_match(article.journal, candidate_fields.get("journal"))
+            journal_score = 1.0 if jm else self._title_similarity(article.journal, candidate_fields.get("journal"))
+
+        year_score = 0.0
+        if article.year and candidate_fields.get("year"):
+            year_score = 1.0 if str(article.year).strip() == str(candidate_fields.get("year")).strip() else 0.0
+
+        return {
+            "title": float(max(0.0, min(1.0, title_score))),
+            "authors": float(max(0.0, min(1.0, author_score))),
+            "journal": float(max(0.0, min(1.0, journal_score))),
+            "year": float(max(0.0, min(1.0, year_score))),
+        }
+
+    def _candidate_composite_score(self, article: Article, component_scores: Dict[str, float]) -> float:
+        weights = {"title": 0.55, "authors": 0.30, "journal": 0.10, "year": 0.05}
+        active_keys: List[str] = []
+        if article.title:
+            active_keys.append("title")
+        if article.authors:
+            active_keys.append("authors")
+        if article.journal:
+            active_keys.append("journal")
+        if article.year:
+            active_keys.append("year")
+        if not active_keys:
+            active_keys = ["title", "authors", "journal", "year"]
+
+        denom = sum(weights[k] for k in active_keys)
+        if denom <= 0:
+            return 0.0
+        weighted = sum(weights[k] * float(component_scores.get(k, 0.0)) for k in active_keys)
+        return float(weighted / denom)
+
+    def _collect_ranked_candidates(self, article: Article) -> List[Dict[str, Any]]:
+        raw_candidates: List[Dict[str, Any]] = []
+        bibliographic_query = self._build_bibliographic_query(article)
+        if bibliographic_query:
+            raw_candidates.extend(self._query_candidates({"query.bibliographic": bibliographic_query}, "bibliographic"))
+        if article.title:
+            raw_candidates.extend(self._query_candidates({"query.title": article.title}, "title"))
+        if article.title and article.authors:
+            raw_candidates.extend(
+                self._query_candidates(
+                    {"query.title": article.title, "query.author": self._first_n_authors(article.authors, 2)},
+                    "author_title",
+                )
+            )
+
+        deduped: Dict[str, Dict[str, Any]] = {}
+        for entry in raw_candidates:
+            meta = entry["metadata"]
+            uid = self._candidate_uid(meta)
+            existing = deduped.get(uid)
+            if existing is None or float(entry.get("query_score") or 0.0) > float(existing.get("query_score") or 0.0):
+                deduped[uid] = entry
+
+        ranked: List[Dict[str, Any]] = []
+        for entry in deduped.values():
+            meta = entry["metadata"]
+            fields = self._crossref_to_fields(meta)
+            component_scores = self._candidate_component_scores(article, fields)
+            composite = self._candidate_composite_score(article, component_scores)
+            ranked.append(
+                {
+                    "metadata": meta,
+                    "matched_by_query": entry.get("matched_by_query"),
+                    "query_score": float(entry.get("query_score") or 0.0),
+                    "fields": fields,
+                    "component_scores": component_scores,
+                    "composite_score": composite,
+                }
+            )
+
+        ranked.sort(key=lambda c: (c["composite_score"], c["query_score"]), reverse=True)
+        return ranked[: self.candidate_rows]
 
     def _search_by_title(self, title: str) -> Dict[str, Any]:
         params = {"query.bibliographic": title, "rows": self.SEARCH_ROWS}
@@ -565,6 +743,12 @@ class CrossrefChecker:
         corrected_reference: Dict[str, Any],
         error: Optional[str] = None,
         required_user_inputs: Optional[List[str]] = None,
+        candidate_matches: Optional[List[Dict[str, Any]]] = None,
+        recommended_candidate_rank: Optional[int] = None,
+        selection_required: bool = False,
+        selection_reason: str = "none",
+        selected_candidate_rank: Optional[int] = None,
+        doi_conflict: bool = False,
     ) -> Dict[str, Any]:
         confidence: Dict[str, Any] = {}
         if lookup.get("score") is not None:
@@ -582,6 +766,12 @@ class CrossrefChecker:
             "correction_patch": correction_patch,
             "corrected_reference": corrected_reference,
             "required_user_inputs": required_user_inputs or [],
+            "candidate_matches": candidate_matches or [],
+            "recommended_candidate_rank": recommended_candidate_rank,
+            "selection_required": selection_required,
+            "selection_reason": selection_reason,
+            "selected_candidate_rank": selected_candidate_rank,
+            "doi_conflict": doi_conflict,
         }
 
         if error:
@@ -592,6 +782,41 @@ class CrossrefChecker:
         result["article"] = asdict(article)
         return result
 
+    def _should_run_shortlist(self, article: Article, doi_conflict: bool) -> bool:
+        if self.shortlist_trigger == "all":
+            return True
+        if self.shortlist_trigger == "missing_only":
+            return self._is_missing(article.doi)
+        return self._is_missing(article.doi) or doi_conflict
+
+    def _serialize_candidate_matches(self, ranked_candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        serialised: List[Dict[str, Any]] = []
+        for idx, candidate in enumerate(ranked_candidates, start=1):
+            fields = candidate.get("fields") or {}
+            serialised.append(
+                {
+                    "rank": idx,
+                    "composite_score": round(float(candidate.get("composite_score") or 0.0), 6),
+                    "component_scores": {
+                        "title": round(float((candidate.get("component_scores") or {}).get("title", 0.0)), 6),
+                        "authors": round(float((candidate.get("component_scores") or {}).get("authors", 0.0)), 6),
+                        "journal": round(float((candidate.get("component_scores") or {}).get("journal", 0.0)), 6),
+                        "year": round(float((candidate.get("component_scores") or {}).get("year", 0.0)), 6),
+                    },
+                    "doi": fields.get("doi"),
+                    "title": fields.get("title"),
+                    "authors": fields.get("authors") or [],
+                    "journal": fields.get("journal"),
+                    "year": fields.get("year"),
+                    "volume": fields.get("volume"),
+                    "issue": fields.get("issue"),
+                    "pages": fields.get("pages"),
+                    "url": fields.get("url"),
+                    "matched_by_query": candidate.get("matched_by_query"),
+                }
+            )
+        return serialised
+
     def check_articles(self, articles: List[Article]) -> List[Dict[str, Any]]:
         results: List[Dict[str, Any]] = []
 
@@ -599,10 +824,105 @@ class CrossrefChecker:
             lookup = self.get_metadata(doi=article.doi, title=article.title)
             matched_by = lookup.get("matched_by") or "none"
             meta = lookup.get("metadata")
+            candidate_matches: List[Dict[str, Any]] = []
+            recommended_candidate_rank: Optional[int] = None
+            selected_candidate_rank: Optional[int] = None
+            selection_required = False
+            selection_reason = "none"
+            doi_conflict = False
+
+            chosen_fields: Optional[Dict[str, Any]] = None
+            chosen_lookup: Dict[str, Any] = {**lookup, "matched_by": matched_by}
+            top_ranked_fields: Optional[Dict[str, Any]] = None
+            resolved_by_shortlist = False
+            critical_with_provided_doi = False
 
             if meta:
                 crossref_fields = self._crossref_to_fields(meta)
-                field_assessment = self.assess_fields(article, crossref_fields)
+                initial_assessment = self.assess_fields(article, crossref_fields)
+                doi_conflict = initial_assessment.get("doi", {}).get("state") == "conflict"
+                critical_with_provided_doi = bool(
+                    article.doi and self._determine_status(initial_assessment) == "critical_mismatch"
+                )
+                run_shortlist = self._should_run_shortlist(
+                    article,
+                    doi_conflict=doi_conflict or self._determine_status(initial_assessment) == "critical_mismatch",
+                )
+            else:
+                run_shortlist = self._should_run_shortlist(article, doi_conflict=False)
+                crossref_fields = None
+                initial_assessment = None
+
+            ranked_candidates: List[Dict[str, Any]] = []
+            if run_shortlist:
+                ranked_candidates = self._collect_ranked_candidates(article)
+                candidate_matches = self._serialize_candidate_matches(ranked_candidates)
+                if ranked_candidates:
+                    recommended_candidate_rank = 1
+                    top_ranked_fields = ranked_candidates[0].get("fields")
+
+                selected_rank_raw = self.selection_map.get(article.citation_id)
+                if selected_rank_raw is not None:
+                    try:
+                        selected_rank = int(selected_rank_raw)
+                    except (TypeError, ValueError):
+                        selected_rank = -1
+                    if 1 <= selected_rank <= len(ranked_candidates):
+                        chosen_candidate = ranked_candidates[selected_rank - 1]
+                        chosen_fields = chosen_candidate.get("fields")
+                        selected_candidate_rank = selected_rank
+                        resolved_by_shortlist = True
+                        chosen_lookup = {
+                            "matched_by": "title",
+                            "score": float(chosen_candidate.get("composite_score") or 0.0),
+                            "candidate_rank": selected_rank,
+                            "candidate_title": (chosen_candidate.get("fields") or {}).get("title"),
+                        }
+                    else:
+                        selection_required = True
+                        selection_reason = "low_confidence"
+                elif ranked_candidates:
+                    top = ranked_candidates[0]
+                    top_score = float(top.get("composite_score") or 0.0)
+                    second_score = float(ranked_candidates[1].get("composite_score") or 0.0) if len(ranked_candidates) > 1 else 0.0
+                    gap = top_score - second_score if len(ranked_candidates) > 1 else 1.0
+                    top_fields = top.get("fields") or {}
+
+                    provided_doi_norm = self._normalise_doi(article.doi)
+                    top_doi_norm = self._normalise_doi(top_fields.get("doi"))
+                    top_doi_conflict = bool(provided_doi_norm and top_doi_norm and provided_doi_norm != top_doi_norm)
+                    if top_doi_conflict:
+                        doi_conflict = True
+
+                    auto_ok = (
+                        top_score >= self.auto_accept_threshold
+                        and gap >= self.ambiguity_gap_threshold
+                        and not top_doi_conflict
+                        and not critical_with_provided_doi
+                    )
+                    if auto_ok:
+                        chosen_fields = top_fields
+                        resolved_by_shortlist = True
+                        chosen_lookup = {
+                            "matched_by": "title",
+                            "score": top_score,
+                            "candidate_rank": 1,
+                            "candidate_title": top_fields.get("title"),
+                        }
+                    else:
+                        selection_required = True
+                        if top_doi_conflict or critical_with_provided_doi:
+                            selection_reason = "doi_conflict_review"
+                        elif top_score < self.auto_accept_threshold:
+                            selection_reason = "low_confidence"
+                        else:
+                            selection_reason = "ambiguous_top2"
+
+            if chosen_fields is None and crossref_fields is not None and not selection_required:
+                chosen_fields = crossref_fields
+
+            if chosen_fields is not None:
+                field_assessment = self.assess_fields(article, chosen_fields)
                 correction_patch = self._build_correction_patch(field_assessment)
                 corrected_fields = self._apply_patch_to_fields(article, correction_patch)
                 corrected_reference = self._build_corrected_reference(article, corrected_fields, self.emit_corrected_reference)
@@ -611,41 +931,62 @@ class CrossrefChecker:
                 results.append(
                     self._build_result(
                         article=article,
-                        lookup={**lookup, "matched_by": matched_by},
+                        lookup=chosen_lookup,
                         status=status,
                         field_assessment=field_assessment,
                         correction_patch=correction_patch,
                         corrected_reference=corrected_reference,
-                        error=(
-                            "Critical mismatch in one or more required fields"
-                            if status == "critical_mismatch"
-                            else None
-                        ),
+                        error=("Critical mismatch in one or more required fields" if status == "critical_mismatch" else None),
+                        candidate_matches=candidate_matches,
+                        recommended_candidate_rank=recommended_candidate_rank,
+                        selection_required=False,
+                        selection_reason="none",
+                        selected_candidate_rank=selected_candidate_rank if resolved_by_shortlist else None,
+                        doi_conflict=doi_conflict,
                     )
                 )
             else:
-                fallback_assessment: Dict[str, Dict[str, Any]] = {}
-                for field in ALL_FIELDS:
-                    provided_value = article.provided_fields().get(field)
-                    fallback_assessment[field] = {
-                        "state": "missing" if self._is_missing(provided_value) else "correct",
-                        "provided": provided_value,
-                        "crossref": None,
-                        "critical": field in self.critical_fields,
-                        "match": None,
-                    }
+                if top_ranked_fields:
+                    fallback_assessment = self.assess_fields(article, top_ranked_fields)
+                elif initial_assessment is not None:
+                    fallback_assessment = initial_assessment
+                else:
+                    fallback_assessment = {}
+                    for field in ALL_FIELDS:
+                        provided_value = article.provided_fields().get(field)
+                        fallback_assessment[field] = {
+                            "state": "missing" if self._is_missing(provided_value) else "correct",
+                            "provided": provided_value,
+                            "crossref": None,
+                            "critical": field in self.critical_fields,
+                            "match": None,
+                        }
 
                 unresolved_error = "No reliable Crossref match found"
-                if matched_by == "title" and lookup.get("score", 0.0) < self.title_match_threshold:
+                out_status = "unresolved"
+                if selection_required and selection_reason == "doi_conflict_review":
+                    out_status = "critical_mismatch"
+                    unresolved_error = "Provided DOI conflicts with top candidate; user selection required"
+                elif selection_required and selection_reason == "ambiguous_top2":
+                    unresolved_error = "Top candidates are too close; user selection required"
+                elif selection_required and selection_reason == "low_confidence":
+                    unresolved_error = "Top candidate is below auto-accept threshold; user selection required"
+                elif matched_by == "title" and lookup.get("score", 0.0) < self.title_match_threshold:
                     unresolved_error = "Top title candidate is below confidence threshold"
                 elif matched_by == "none":
                     unresolved_error = "Insufficient metadata for lookup"
 
+                unresolved_lookup = {**lookup, "matched_by": ("title" if candidate_matches else matched_by)}
+                if candidate_matches:
+                    unresolved_lookup["score"] = candidate_matches[0].get("composite_score")
+                    unresolved_lookup["candidate_rank"] = candidate_matches[0].get("rank")
+                    unresolved_lookup["candidate_title"] = candidate_matches[0].get("title")
+
                 results.append(
                     self._build_result(
                         article=article,
-                        lookup={**lookup, "matched_by": matched_by},
-                        status="unresolved",
+                        lookup=unresolved_lookup,
+                        status=out_status,
                         field_assessment=fallback_assessment,
                         correction_patch={"set": {}, "unset": []},
                         corrected_reference=self._build_corrected_reference(
@@ -655,6 +996,12 @@ class CrossrefChecker:
                         ),
                         error=unresolved_error,
                         required_user_inputs=self._build_required_inputs(article),
+                        candidate_matches=candidate_matches,
+                        recommended_candidate_rank=recommended_candidate_rank,
+                        selection_required=selection_required,
+                        selection_reason=selection_reason if selection_required else "none",
+                        selected_candidate_rank=selected_candidate_rank,
+                        doi_conflict=doi_conflict,
                     )
                 )
 
@@ -950,6 +1297,29 @@ def _parse_critical_fields(raw: str) -> List[str]:
     return fields
 
 
+def _parse_shortlist_trigger(value: str) -> str:
+    trigger = (value or "").strip().lower()
+    if trigger not in SHORTLIST_TRIGGERS:
+        raise ValueError(f"Invalid shortlist trigger: {value}")
+    return trigger
+
+
+def _parse_selection_map(path: Optional[str]) -> Dict[str, int]:
+    if not path:
+        return {}
+    with open(path, "r", encoding="utf-8-sig") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError("selection_map must be a JSON object mapping citation_id to rank")
+    parsed: Dict[str, int] = {}
+    for k, v in data.items():
+        try:
+            parsed[str(k)] = int(v)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid rank for citation_id {k}: {v}") from exc
+    return parsed
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate citations using Crossref and emit strict correction-ready results.")
     parser.add_argument("-i", "--input", required=True, help="Path to JSON, CSV, TXT, MD, TEX, or BIB file containing citation records")
@@ -977,6 +1347,34 @@ def main() -> None:
         default="true",
         help="Whether to include corrected_reference text (true/false). Default: true",
     )
+    parser.add_argument(
+        "--candidate-rows",
+        type=int,
+        default=DEFAULT_CANDIDATE_ROWS,
+        help="Maximum number of candidate matches to retain. Default: 6",
+    )
+    parser.add_argument(
+        "--auto-accept-threshold",
+        type=float,
+        default=DEFAULT_AUTO_ACCEPT_THRESHOLD,
+        help="Auto-accept threshold for top composite candidate score. Default: 0.88",
+    )
+    parser.add_argument(
+        "--ambiguity-gap-threshold",
+        type=float,
+        default=DEFAULT_AMBIGUITY_GAP_THRESHOLD,
+        help="Minimum top-vs-second score gap for auto-accept. Default: 0.06",
+    )
+    parser.add_argument(
+        "--selection-map",
+        help="Optional JSON path mapping citation_id to candidate rank, e.g. {\"paper:4\": 2}",
+    )
+    parser.add_argument(
+        "--shortlist-trigger",
+        default=DEFAULT_SHORTLIST_TRIGGER,
+        choices=sorted(SHORTLIST_TRIGGERS),
+        help="When to run candidate shortlist logic.",
+    )
     args = parser.parse_args()
 
     ext = Path(args.input).suffix.lower().lstrip(".")
@@ -992,6 +1390,8 @@ def main() -> None:
 
     critical_fields = _parse_critical_fields(args.critical_fields)
     emit_corrected_reference = _parse_bool(args.emit_corrected_reference)
+    shortlist_trigger = _parse_shortlist_trigger(args.shortlist_trigger)
+    selection_map = _parse_selection_map(args.selection_map)
 
     print(f"[crossref-checker] Input: {args.input}")
     print(f"[crossref-checker] Parsed citations: {len(articles)}")
@@ -1002,6 +1402,11 @@ def main() -> None:
         critical_fields=critical_fields,
         emit_corrected_reference=emit_corrected_reference,
         schema_version=args.schema_version,
+        candidate_rows=args.candidate_rows,
+        auto_accept_threshold=args.auto_accept_threshold,
+        ambiguity_gap_threshold=args.ambiguity_gap_threshold,
+        shortlist_trigger=shortlist_trigger,
+        selection_map=selection_map,
     )
     results = checker.check_articles(articles)
 
