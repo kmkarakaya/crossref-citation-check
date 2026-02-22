@@ -1,0 +1,324 @@
+{
+  "overall_ready": false,
+  "hard_fail_reasons": [
+    "selection_required_tex: missing_required_selection_flow",
+    "selection_required_txt: missing_required_selection_flow"
+  ],
+  "thresholds": {
+    "min_correction_rate": 0.85,
+    "required_trigger_precision": 1.0,
+    "min_trigger_recall": 0.9,
+    "min_workflow_compliance": 0.9
+  },
+  "metrics": {
+    "correction_rate": 0.891892,
+    "trigger_precision": 1.0,
+    "trigger_recall": 0.0,
+    "workflow_compliance_rate": 0.333333,
+    "case_count": 8,
+    "positive_case_count": 6,
+    "negative_case_count": 2
+  },
+  "per_case": [
+    {
+      "case_id": "positive_explicit_tex",
+      "prompt": "Use $crossref-citation-check on benchmarking/outputs/benchmark_bib.tex and validate/correct the references.",
+      "should_trigger": true,
+      "did_trigger": false,
+      "expects_selection_flow": false,
+      "checks": {
+        "trigger_check": false,
+        "script_first_check": true,
+        "selection_flow_check": true,
+        "evidence_check": false,
+        "output_contract_check": false
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "workflow_score": 0.25,
+      "failed_checks": [
+        "trigger_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\positive_explicit_tex",
+      "contract_errors": [
+        "no_result_json_files"
+      ],
+      "selection_errors": [],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "positive_implicit_txt",
+      "prompt": "Please validate benchmarking/outputs/benchmark_bib.txt against Crossref and fix incorrect DOI/title/year fields.",
+      "should_trigger": true,
+      "did_trigger": false,
+      "expects_selection_flow": false,
+      "checks": {
+        "trigger_check": false,
+        "script_first_check": true,
+        "selection_flow_check": true,
+        "evidence_check": false,
+        "output_contract_check": false
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "workflow_score": 0.25,
+      "failed_checks": [
+        "trigger_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\positive_implicit_txt",
+      "contract_errors": [
+        "no_result_json_files"
+      ],
+      "selection_errors": [],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "positive_contextual_tex",
+      "prompt": "Before submission, quality-check and correct the bibliography in benchmarking/outputs/benchmark_bib.tex.",
+      "should_trigger": true,
+      "did_trigger": false,
+      "expects_selection_flow": false,
+      "checks": {
+        "trigger_check": false,
+        "script_first_check": true,
+        "selection_flow_check": true,
+        "evidence_check": false,
+        "output_contract_check": false
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "workflow_score": 0.25,
+      "failed_checks": [
+        "trigger_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\positive_contextual_tex",
+      "contract_errors": [
+        "no_result_json_files"
+      ],
+      "selection_errors": [],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "negative_translate",
+      "prompt": "Translate this abstract into Turkish with academic tone.",
+      "should_trigger": false,
+      "did_trigger": false,
+      "expects_selection_flow": false,
+      "checks": {
+        "trigger_check": true,
+        "script_first_check": true,
+        "selection_flow_check": true,
+        "evidence_check": true,
+        "output_contract_check": true
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check"
+      ],
+      "workflow_score": 1.0,
+      "failed_checks": [],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\negative_translate",
+      "contract_errors": [],
+      "selection_errors": [],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "negative_summarize",
+      "prompt": "Summarize the attached paper in 5 concise bullet points.",
+      "should_trigger": false,
+      "did_trigger": false,
+      "expects_selection_flow": false,
+      "checks": {
+        "trigger_check": true,
+        "script_first_check": true,
+        "selection_flow_check": true,
+        "evidence_check": true,
+        "output_contract_check": true
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check"
+      ],
+      "workflow_score": 1.0,
+      "failed_checks": [],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\negative_summarize",
+      "contract_errors": [],
+      "selection_errors": [],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "selection_required_tex",
+      "prompt": "Run first-pass on benchmarking/outputs/benchmark_bib.tex, handle any selection_required citations, and rerun with --selection-map.",
+      "should_trigger": true,
+      "did_trigger": false,
+      "expects_selection_flow": true,
+      "checks": {
+        "trigger_check": false,
+        "script_first_check": true,
+        "selection_flow_check": false,
+        "evidence_check": false,
+        "output_contract_check": false
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check",
+        "evidence_check",
+        "output_contract_check",
+        "selection_flow_check"
+      ],
+      "workflow_score": 0.2,
+      "failed_checks": [
+        "trigger_check",
+        "selection_flow_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [
+        "missing_required_selection_flow"
+      ],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\selection_required_tex",
+      "contract_errors": [
+        "no_result_json_files"
+      ],
+      "selection_errors": [
+        "missing_before_apply"
+      ],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "selection_required_txt",
+      "prompt": "Run first-pass on benchmarking/outputs/benchmark_bib.txt, ask/resolve candidate ranks when needed, then rerun with --selection-map.",
+      "should_trigger": true,
+      "did_trigger": false,
+      "expects_selection_flow": true,
+      "checks": {
+        "trigger_check": false,
+        "script_first_check": true,
+        "selection_flow_check": false,
+        "evidence_check": false,
+        "output_contract_check": false
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check",
+        "evidence_check",
+        "output_contract_check",
+        "selection_flow_check"
+      ],
+      "workflow_score": 0.2,
+      "failed_checks": [
+        "trigger_check",
+        "selection_flow_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [
+        "missing_required_selection_flow"
+      ],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\selection_required_txt",
+      "contract_errors": [
+        "no_result_json_files"
+      ],
+      "selection_errors": [
+        "missing_before_apply"
+      ],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    },
+    {
+      "case_id": "noisy_malformed_txt",
+      "prompt": "plz fix refz ??? benchmarking/outputs/benchmark_bib.txt doi maybe fake routeing title maybe wrong thx",
+      "should_trigger": true,
+      "did_trigger": false,
+      "expects_selection_flow": false,
+      "checks": {
+        "trigger_check": false,
+        "script_first_check": true,
+        "selection_flow_check": true,
+        "evidence_check": false,
+        "output_contract_check": false
+      },
+      "applicable_checks": [
+        "trigger_check",
+        "script_first_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "workflow_score": 0.25,
+      "failed_checks": [
+        "trigger_check",
+        "evidence_check",
+        "output_contract_check"
+      ],
+      "direct_api_violation": false,
+      "hard_fail_reasons": [],
+      "case_dir": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\readiness_runs\\noisy_malformed_txt",
+      "contract_errors": [
+        "no_result_json_files"
+      ],
+      "selection_errors": [],
+      "files_found": {
+        "response_md": false,
+        "commands_txt": false,
+        "result_json_count": 0
+      }
+    }
+  ]
+}

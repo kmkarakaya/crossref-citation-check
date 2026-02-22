@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import shlex
 import subprocess
 import sys
@@ -139,6 +140,21 @@ def main() -> int:
         choices=["script", "agent-in-loop"],
         help="script: run all steps locally; agent-in-loop: pause for manual agent prompt steps.",
     )
+    parser.add_argument(
+        "--readiness",
+        action="store_true",
+        help="Run skill-readiness grading after score/report.",
+    )
+    parser.add_argument(
+        "--readiness-cases",
+        default="benchmarking/readiness_cases.csv",
+        help="Path to readiness cases CSV (relative to --root or absolute).",
+    )
+    parser.add_argument(
+        "--readiness-runs-dir",
+        default="benchmarking/outputs/readiness_runs",
+        help="Directory containing per-case readiness run artifacts (relative to --root or absolute).",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -168,6 +184,13 @@ def main() -> int:
     bib_after = outputs_dir / "bib_results_after_apply.json"
     refs_after = outputs_dir / "refs_results_after_apply.json"
     score_out = outputs_dir / "benchmark_score.json"
+    report_out = outputs_dir / "report.md"
+    readiness_json = outputs_dir / "skill_readiness.json"
+    readiness_md = outputs_dir / "skill_readiness.md"
+    readiness_cases_raw = Path(args.readiness_cases)
+    readiness_cases = readiness_cases_raw if readiness_cases_raw.is_absolute() else (root / readiness_cases_raw)
+    readiness_runs_raw = Path(args.readiness_runs_dir)
+    readiness_runs_dir = readiness_runs_raw if readiness_runs_raw.is_absolute() else (root / readiness_runs_raw)
 
     commands: List[List[str]] = []
 
@@ -210,14 +233,54 @@ def main() -> int:
         str(groundtruth_tex),
         "--groundtruth-txt",
         str(groundtruth_txt),
+        "--benchmark-tex",
+        str(benchmark_tex),
+        "--benchmark-txt",
+        str(benchmark_txt),
         "--result-tex",
         str(bib_after),
         "--result-txt",
         str(refs_after),
+        "--manifest",
+        str(benchmark_manifest),
         "--output",
         str(score_out),
         "--min-overall",
         str(args.min_overall),
+    ]
+    report_cmd = [
+        args.python,
+        str(bench_dir / "benchmark_report.py"),
+        "--groundtruth-tex",
+        str(groundtruth_tex),
+        "--groundtruth-txt",
+        str(groundtruth_txt),
+        "--benchmark-tex",
+        str(benchmark_tex),
+        "--benchmark-txt",
+        str(benchmark_txt),
+        "--result-tex",
+        str(bib_after),
+        "--result-txt",
+        str(refs_after),
+        "--score-json",
+        str(score_out),
+        "--output",
+        str(report_out),
+    ]
+    readiness_cmd = [
+        args.python,
+        str(bench_dir / "benchmark_skill_readiness.py"),
+        "--cases",
+        str(readiness_cases),
+        "--runs-dir",
+        str(readiness_runs_dir),
+        "--correction-score",
+        str(score_out),
+        "--output",
+        str(readiness_json),
+        "--report",
+        str(readiness_md),
     ]
 
     if args.mode == "script":
@@ -282,6 +345,9 @@ def main() -> int:
             )
 
         commands.append(score_cmd)
+        commands.append(report_cmd)
+        if args.readiness:
+            commands.append(readiness_cmd)
     else:
         if not args.score_only:
             if not args.skip_generate:
@@ -315,16 +381,40 @@ def main() -> int:
                 return 1
 
         commands.append(score_cmd)
+        commands.append(report_cmd)
+        if args.readiness:
+            commands.append(readiness_cmd)
 
+    score_failed_code: int | None = None
     for cmd in commands:
         code = _run(cmd, cwd=root)
         if code != 0:
+            if cmd == score_cmd and code == 2:
+                print("[run-benchmark] Score threshold not met; continuing to generate report.")
+                score_failed_code = code
+                continue
             print(f"[run-benchmark] STOP: command failed with exit code {code}")
             return code
 
     print("[run-benchmark] Done.")
+    if score_out.exists():
+        try:
+            score_payload = json.loads(score_out.read_text(encoding="utf-8-sig"))
+            overall = score_payload.get("overall") or {}
+            correction_rate = overall.get("overall_correction_rate")
+            fixed = overall.get("total_fixed_fields")
+            targeted = overall.get("total_targeted_wrong_fields")
+            print(
+                f"[run-benchmark] Correction summary: fixed {fixed} / {targeted} targeted wrong fields "
+                f"(rate={correction_rate})"
+            )
+        except Exception:
+            print("[run-benchmark] Warning: could not parse benchmark_score.json for summary.")
     print(f"[run-benchmark] Score report: {score_out}")
-    return 0
+    print(f"[run-benchmark] Please review report: {report_out}")
+    if args.readiness:
+        print(f"[run-benchmark] Please review readiness report: {readiness_md}")
+    return score_failed_code or 0
 
 
 if __name__ == "__main__":

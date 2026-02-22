@@ -1,12 +1,12 @@
 {
   "generator_version": "1.0",
   "groundtruth": {
-    "tex": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\inputs\\groundtruth_bib.tex",
-    "txt": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\inputs\\groundtruth_bib.txt"
+    "tex": "benchmarking\\outputs\\inputs\\groundtruth_bib.tex",
+    "txt": "benchmarking\\outputs\\inputs\\groundtruth_bib.txt"
   },
   "outputs": {
-    "tex": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\benchmark_bib.tex",
-    "txt": "C:\\Codes\\crossref-citation-check\\benchmarking\\outputs\\benchmark_bib.txt"
+    "tex": "benchmarking\\outputs\\benchmark_bib.tex",
+    "txt": "benchmarking\\outputs\\benchmark_bib.txt"
   },
   "mutations": {
     "tex": [
@@ -17,6 +17,20 @@
           "title typo: routing -> routeing",
           "venue/year drift: 138->139 and 2024->2025",
           "deleted DOI URL line"
+        ],
+        "mutated_fields_core": [
+          "title",
+          "journal",
+          "year",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "journal",
+          "year",
+          "doi",
+          "url"
         ],
         "before_excerpt": "\\bibitem{paper:1}\nHalil Savuran and Murat Karakaya: ``A novel solution for routing a swarm of drones operated on a mobile host.''\nEngineering Applications of Artificial Intelligence 138, 109337 (2024).\n\\url{https://doi.o",
         "after_excerpt": "\\bibitem{paper:1}\nHalil Savuran and Murat Karakaya: ``A novel solution for routeing a swarm of drones operated on a mobile host.''\nEngineering Applications of Artificial Intelligence 139, 109337 (2025)."
@@ -29,6 +43,18 @@
           "year drift: 2022->2023",
           "injected fake DOI URL"
         ],
+        "mutated_fields_core": [
+          "authors",
+          "year",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "authors",
+          "year",
+          "doi",
+          "url"
+        ],
         "before_excerpt": "\\bibitem{paper:2}\nGökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli, and Robertas Damaševičius:\n``Deep learning based fall detection using smartwatches for healthcare applications.''\nBiomedical Signal ",
         "after_excerpt": "\\bibitem{paper:2}\nGökhan Şengül, Murat Karakaya, Olusola O. Abayomi-Alli, and Robertas Damaševičius:\n``Deep learning based fall detection using smartwatches for healthcare applications.''\nBiomedical Signal Processing and"
       },
@@ -38,6 +64,14 @@
         "mutations": [
           "truncated title after multi-label annotation",
           "journal drift + fake issue/pages fragment"
+        ],
+        "mutated_fields_core": [
+          "title",
+          "journal"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "journal"
         ],
         "before_excerpt": "\\bibitem{paper:3}\nTolga Üstünkök and Murat Karakaya: ``SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images.''\nJournal of Applied Remote Sensing 15(03), 036509 (2021).\n\\url{https://doi.org",
         "after_excerpt": "\\bibitem{paper:3}\nTolga Üstünkök and Murat Karakaya: ``SS-MLA: a semisupervised method for multi-label annotation.''\nJournal of Advanced Remote Sensing 15(03), 036509, 99(9), 999--1001 (2021).\n\\url{https://doi.org/10.111"
@@ -50,6 +84,17 @@
           "page range drift: 364--370->364--376",
           "added fake DOI URL"
         ],
+        "mutated_fields_core": [
+          "title",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "pages",
+          "doi",
+          "url"
+        ],
         "before_excerpt": "\\bibitem{paper:4}\nMurat Karakaya, M. Eryilmaz, and U. O. Ceyhan:\n``Analyzing students' Academic Success in Prerequisite Course Chains:''\nInternational Journal of Engineering Education 34(2A), 364--370 (2018).",
         "after_excerpt": "\\bibitem{paper:4}\nMurat Karakaya, M. Eryilmaz, and U. O. Ceyhan:\n``Analyzing students Academic Success in Prerequisite Course Chains:''\nInternational Journal of Engineering Education 34(2A), 364--376 (2018).\n\\url{https:/"
       },
@@ -60,6 +105,18 @@
           "title semantic drift: moving->stationary",
           "year drift: 2016->2017",
           "DOI drift suffix 4->9"
+        ],
+        "mutated_fields_core": [
+          "title",
+          "year",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "year",
+          "doi",
+          "url"
         ],
         "before_excerpt": "\\bibitem{paper:5}\nHalil Savuran and Murat Karakaya: ``Efficient route planning for an unmanned air vehicle deployed on a moving carrier.''\nSoft Computing 20(7), 2905--2920 (2016).\n\\url{https://doi.org/10.1007/s00500-015-",
         "after_excerpt": "\\bibitem{paper:5}\nHalil Savuran and Murat Karakaya: ``Efficient route planning for an unmanned air vehicle deployed on a stationary carrier.''\nSoft Computing 20(7), 2905--2920 (2017).\n\\url{https://doi.org/10.1007/s00500-"
@@ -72,6 +129,18 @@
           "venue drift: 9(9)->9(4)",
           "replaced URL with fake non-DOI URL"
         ],
+        "mutated_fields_core": [
+          "title",
+          "journal",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "journal",
+          "doi",
+          "url"
+        ],
         "before_excerpt": "\\bibitem{paper:6}\nMurat Karakaya: ``MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.''\nKSII Transactions on Internet and Information Systems 9(9), 3396--3411 ",
         "after_excerpt": "\\bibitem{paper:6}\nMurat Karakaya: ``An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.''\nKSII Transactions on Internet and Information Systems 9(4), 3396--3411 (2015)"
       },
@@ -82,6 +151,15 @@
           "page range drift: 65--82->65--92",
           "added fake DOI URL",
           "removed no-match note from tex variant"
+        ],
+        "mutated_fields_core": [
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "pages",
+          "doi",
+          "url"
         ],
         "before_excerpt": "\\bibitem{paper:7}\nMurat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.''\nAd Hoc \\& Sensor Wireless Networks 28(1--2), 65--82 (2015).\nNo relia",
         "after_excerpt": "\\bibitem{paper:7}\nMurat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.''\nAd Hoc \\& Sensor Wireless Networks 28(1--2), 65--92 (2015).\n\\url{htt"
@@ -98,6 +176,20 @@
           "deleted DOI token",
           "deleted DOI URL token"
         ],
+        "mutated_fields_core": [
+          "title",
+          "journal",
+          "year",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "journal",
+          "year",
+          "doi",
+          "url"
+        ],
         "before_excerpt": "Halil Savuran, Murat Karakaya: \"A novel solution for routing a swarm of drones operated on a mobile host.\". '' Engineering Applications of Artificial Intelligence 138, 109337 (2024), 138, 109337 (2024). doi:10.1016/j.eng",
         "after_excerpt": "Halil Savuran, Murat Karakaya: \"A novel solution for routeing a swarm of drones operated on a mobile host.\". '' Engineering Applications of Artificial Intelligence 139, 109337 (2025), 139, 109337 (2025). "
       },
@@ -108,6 +200,18 @@
           "removed one middle author token",
           "year drift: 2022->2023",
           "injected fake DOI"
+        ],
+        "mutated_fields_core": [
+          "authors",
+          "year",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "authors",
+          "year",
+          "doi",
+          "url"
         ],
         "before_excerpt": "Gökhan Şengül, Murat Karakaya, Sanjay Misra, Olusola O. Abayomi-Alli, Robertas Damaševičius: \"Deep learning based fall detection using smartwatches for healthcare applications.\". '' Biomedical Signal Processing and Contr",
         "after_excerpt": "Gökhan Şengül, Murat Karakaya, Olusola O. Abayomi-Alli, Robertas Damaševičius: \"Deep learning based fall detection using smartwatches for healthcare applications.\". '' Biomedical Signal Processing and Control 71, 103242 "
@@ -120,6 +224,14 @@
           "journal drift: Applied->Advanced",
           "added fake issue/pages fragment"
         ],
+        "mutated_fields_core": [
+          "title",
+          "journal"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "journal"
+        ],
         "before_excerpt": "Tolga Üstünkök, Murat Karakaya: \"SS-MLA: a semisupervised method for multi-label annotation of remotely sensed images.\". '' Journal of Applied Remote Sensing 15(03), 036509 (2021), 15(03) (2021). doi:10.1117/1.jrs.15.036",
         "after_excerpt": "Tolga Üstünkök, Murat Karakaya: \"SS-MLA: a semisupervised method for multi-label annotation.\". '' Journal of Advanced Remote Sensing 15(03), 036509 (2021), 15(03) (2021); 99(9), 999--1001. doi:10.1117/1.jrs.15.036509. ht"
       },
@@ -130,6 +242,17 @@
           "title apostrophe removed",
           "page range drift: 364--370->364--376",
           "added fake DOI and DOI URL"
+        ],
+        "mutated_fields_core": [
+          "title",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "pages",
+          "doi",
+          "url"
         ],
         "before_excerpt": "Murat Karakaya, M. Eryilmaz, and U. O. Ceyhan:``Analyzing students' Academic Success in Prerequisite Course Chains''International Journal of Engineering Education 34(2A), 364--370 (2018).",
         "after_excerpt": "Murat Karakaya, M. Eryilmaz, and U. O. Ceyhan:``Analyzing students Academic Success in Prerequisite Course Chains''International Journal of Engineering Education 34(2A), 364--376 (2018). doi:10.4242/fake.chain.2018. http"
@@ -142,6 +265,18 @@
           "year drift: 2016->2017",
           "DOI drift suffix 4->9"
         ],
+        "mutated_fields_core": [
+          "title",
+          "year",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "year",
+          "doi",
+          "url"
+        ],
         "before_excerpt": "Halil Savuran, Murat Karakaya: \"Efficient route planning for an unmanned air vehicle deployed on a moving carrier.\". '' Soft Computing 20(7), 2905--2920 (2016), 20(7), 2905-2920 (2016). doi:10.1007/s00500-015-1970-4. htt",
         "after_excerpt": "Halil Savuran, Murat Karakaya: \"Efficient route planning for an unmanned air vehicle deployed on a stationary carrier.\". '' Soft Computing 20(7), 2905--2920 (2017), 20(7), 2905-2920 (2017). doi:10.1007/s00500-015-1970-9."
       },
@@ -153,6 +288,18 @@
           "venue drift: 9(9)->9(4)",
           "replaced URL with fake non-DOI URL"
         ],
+        "mutated_fields_core": [
+          "title",
+          "journal",
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "title",
+          "journal",
+          "doi",
+          "url"
+        ],
         "before_excerpt": "Murat Karakaya: \"MSCT: An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.\". KSII Transactions on Internet and Information Systems, 9(9) (2015). doi:10.3837/tiis.2015.",
         "after_excerpt": "Murat Karakaya: \"An Efficient Data Collection Heuristic for Wireless Sensor Networks with Limited Sensor Memory Capacity.\". KSII Transactions on Internet and Information Systems, 9(4) (2015). doi:10.3837/tiis.2015.09.007"
       },
@@ -162,6 +309,15 @@
         "mutations": [
           "page range drift: 65--82->65--92",
           "added fake DOI and DOI URL"
+        ],
+        "mutated_fields_core": [
+          "doi",
+          "url"
+        ],
+        "mutated_fields_all": [
+          "pages",
+          "doi",
+          "url"
         ],
         "before_excerpt": "Murat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.'' Ad Hoc 28(1--2), 65--82 (2015).",
         "after_excerpt": "Murat Karakaya: ``Time-Sensitive Ant Colony Optimization to Schedule a Mobile Sink for Data Collection in Wireless Sensor Networks.'' Ad Hoc 28(1--2), 65--92 (2015). doi:10.5555/ahsn.2015.028. https://doi.org/10.5555/ahs"

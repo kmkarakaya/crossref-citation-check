@@ -1,0 +1,897 @@
+{
+  "scoring_policy": {
+    "primary_score_mode": "mutation-correction rate (targeted wrong fields fixed / targeted wrong fields)",
+    "targeted_field_source": "manifest.mutated_fields_core with auto-diff fallback",
+    "core_fields": [
+      "title",
+      "authors",
+      "journal",
+      "doi",
+      "year",
+      "url"
+    ]
+  },
+  "threshold": 0.8,
+  "files": {
+    "tex": {
+      "label": "tex",
+      "groundtruth_count": 7,
+      "benchmark_count": 7,
+      "result_count": 7,
+      "total_targeted_wrong_fields": 19,
+      "total_fixed_fields": 17,
+      "correction_rate": 0.894737,
+      "average_status_score": 0.171429,
+      "citations": [
+        {
+          "citation_id": "paper:1",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "journal",
+            "year",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 5,
+          "fixed_fields": [
+            "title",
+            "year",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 4,
+          "correction_rate": 0.8,
+          "warning_no_targeted_fields": false,
+          "warnings": [],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "paper:2",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "authors",
+            "year",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 4,
+          "fixed_fields": [
+            "authors",
+            "year",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 4,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": false,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "authors": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.888889,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "paper:3",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "journal"
+          ],
+          "targeted_wrong_count": 2,
+          "fixed_fields": [
+            "title",
+            "journal"
+          ],
+          "fixed_count": 2,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": false,
+          "warnings": [],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "paper:4",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [],
+          "targeted_wrong_count": 0,
+          "fixed_fields": [],
+          "fixed_count": 0,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": true,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            }
+          },
+          "status": "unresolved",
+          "selection_required": false,
+          "status_score": 0.6
+        },
+        {
+          "citation_id": "paper:5",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "year",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 4,
+          "fixed_fields": [
+            "title",
+            "year",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 4,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": false,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "paper:6",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "journal",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 4,
+          "fixed_fields": [
+            "title",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 3,
+          "correction_rate": 0.75,
+          "warning_no_targeted_fields": false,
+          "warnings": [],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "paper:7",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [],
+          "targeted_wrong_count": 0,
+          "fixed_fields": [],
+          "fixed_count": 0,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": true,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            }
+          },
+          "status": "unresolved",
+          "selection_required": false,
+          "status_score": 0.6
+        }
+      ]
+    },
+    "txt": {
+      "label": "txt",
+      "groundtruth_count": 7,
+      "benchmark_count": 7,
+      "result_count": 7,
+      "total_targeted_wrong_fields": 18,
+      "total_fixed_fields": 16,
+      "correction_rate": 0.888889,
+      "average_status_score": 0.171429,
+      "citations": [
+        {
+          "citation_id": "txt:1",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "journal",
+            "year",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 5,
+          "fixed_fields": [
+            "title",
+            "year",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 4,
+          "correction_rate": 0.8,
+          "warning_no_targeted_fields": false,
+          "warnings": [],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "txt:2",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "authors",
+            "year",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 4,
+          "fixed_fields": [
+            "authors",
+            "year",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 4,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": false,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "authors": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.888889,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "txt:3",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "journal"
+          ],
+          "targeted_wrong_count": 2,
+          "fixed_fields": [
+            "title",
+            "journal"
+          ],
+          "fixed_count": 2,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": false,
+          "warnings": [],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "txt:4",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [],
+          "targeted_wrong_count": 0,
+          "fixed_fields": [],
+          "fixed_count": 0,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": true,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            }
+          },
+          "status": "unresolved",
+          "selection_required": false,
+          "status_score": 0.6
+        },
+        {
+          "citation_id": "txt:5",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "year",
+            "doi",
+            "url"
+          ],
+          "targeted_wrong_count": 4,
+          "fixed_fields": [
+            "title",
+            "year",
+            "doi",
+            "url"
+          ],
+          "fixed_count": 4,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": false,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "year": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "txt:6",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [
+            "title",
+            "journal",
+            "url"
+          ],
+          "targeted_wrong_count": 3,
+          "fixed_fields": [
+            "title",
+            "url"
+          ],
+          "fixed_count": 2,
+          "correction_rate": 0.666667,
+          "warning_no_targeted_fields": false,
+          "warnings": [],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": true,
+              "benchmark_match": 0.0,
+              "corrected_match": 1.0,
+              "fixed": true
+            }
+          },
+          "status": "critical_mismatch",
+          "selection_required": false,
+          "status_score": 0.0
+        },
+        {
+          "citation_id": "txt:7",
+          "missing_result": false,
+          "targeted_source": "manifest",
+          "targeted_wrong_fields": [],
+          "targeted_wrong_count": 0,
+          "fixed_fields": [],
+          "fixed_count": 0,
+          "correction_rate": 1.0,
+          "warning_no_targeted_fields": true,
+          "warnings": [
+            "auto_diff_only_fields=['journal']"
+          ],
+          "field_outcomes": {
+            "title": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "authors": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "journal": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "doi": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            },
+            "year": {
+              "targeted_wrong": false,
+              "benchmark_match": 1.0,
+              "corrected_match": 1.0,
+              "fixed": false
+            },
+            "url": {
+              "targeted_wrong": false,
+              "benchmark_match": 0.0,
+              "corrected_match": 0.0,
+              "fixed": false
+            }
+          },
+          "status": "unresolved",
+          "selection_required": false,
+          "status_score": 0.6
+        }
+      ]
+    }
+  },
+  "overall": {
+    "total_citations": 14,
+    "total_targeted_wrong_fields": 37,
+    "total_fixed_fields": 33,
+    "overall_correction_rate": 0.891892,
+    "average_status_score": 0.171429,
+    "passed": true
+  }
+}

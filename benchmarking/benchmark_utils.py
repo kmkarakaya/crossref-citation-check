@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import re
 import sys
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 
 ALL_FIELDS = ("authors", "title", "journal", "volume", "issue", "pages", "year", "doi", "url")
+CORE_FIELDS = ("title", "authors", "journal", "doi", "year", "url")
 
 
 def load_crossref_checker() -> Tuple[Any, Path]:
@@ -86,6 +88,102 @@ def author_overlap_score(left_authors: List[str], right_authors: List[str]) -> f
     left = {k for k in (author_key(a) for a in (left_authors or [])) if k}
     right = {k for k in (author_key(a) for a in (right_authors or [])) if k}
     return f1_overlap(left, right)
+
+
+def _title_similarity(left: Any, right: Any) -> float:
+    l = normalise_text(str(left) if left is not None else "") or ""
+    r = normalise_text(str(right) if right is not None else "") or ""
+    if not l or not r:
+        return 0.0
+    return SequenceMatcher(None, l, r).ratio()
+
+
+def _journal_numeric_tokens(value: Any) -> List[str]:
+    text = str(value) if value is not None else ""
+    return re.findall(r"\d+[a-zA-Z]*", text)
+
+
+def journal_match(left: Any, right: Any) -> bool:
+    left_raw = str(left) if left is not None else ""
+    right_raw = str(right) if right is not None else ""
+    l_norm = normalise_text(left_raw) or ""
+    r_norm = normalise_text(right_raw) or ""
+    if not l_norm or not r_norm:
+        return False
+    if l_norm == r_norm:
+        return True
+    if l_norm in r_norm or r_norm in l_norm:
+        text_ok = True
+    else:
+        text_ok = _title_similarity(left_raw, right_raw) >= 0.78
+    if not text_ok:
+        return False
+
+    left_nums = _journal_numeric_tokens(left_raw)
+    right_nums = _journal_numeric_tokens(right_raw)
+    if left_nums and right_nums:
+        return left_nums == right_nums
+    return True
+
+
+def expand_authors_for_scoring(authors: List[str]) -> List[str]:
+    expanded: List[str] = []
+    for raw_name in (authors or []):
+        if not raw_name:
+            continue
+        text = str(raw_name).strip()
+        if not text:
+            continue
+
+        if ";" in text:
+            expanded.extend([p.strip() for p in text.split(";") if p.strip()])
+            continue
+
+        and_parts = [p.strip() for p in re.split(r"\s+and\s+", text, flags=re.IGNORECASE) if p.strip()]
+        if len(and_parts) > 1:
+            expanded.extend(and_parts)
+            continue
+
+        comma_parts = [p.strip() for p in text.split(",") if p.strip()]
+        if len(comma_parts) >= 2 and all(len(p.split()) >= 2 for p in comma_parts):
+            expanded.extend(comma_parts)
+            continue
+
+        if len(comma_parts) >= 4 and len(comma_parts) % 2 == 0:
+            paired = [f"{comma_parts[i]}, {comma_parts[i + 1]}" for i in range(0, len(comma_parts), 2)]
+            expanded.extend(paired)
+            continue
+
+        expanded.append(text)
+
+    deduped: List[str] = []
+    seen = set()
+    for name in expanded:
+        key = name.strip().lower()
+        if key and key not in seen:
+            deduped.append(name)
+            seen.add(key)
+    return deduped
+
+
+def field_match_score(field: str, groundtruth: Any, predicted: Any) -> float:
+    if field == "authors":
+        gt_authors = expand_authors_for_scoring(groundtruth or [])
+        pred_authors = expand_authors_for_scoring(predicted or [])
+        return author_overlap_score(gt_authors, pred_authors)
+    if field == "title":
+        return 1.0 if normalise_text(groundtruth) == normalise_text(predicted) else 0.0
+    if field == "journal":
+        return 1.0 if journal_match(groundtruth, predicted) else 0.0
+    if field == "doi":
+        return 1.0 if normalise_doi(groundtruth) == normalise_doi(predicted) else 0.0
+    if field == "year":
+        return 1.0 if str(groundtruth).strip() == str(predicted).strip() else 0.0
+    if field == "url":
+        return 1.0 if normalise_url(groundtruth) == normalise_url(predicted) else 0.0
+    if field in ALL_FIELDS:
+        return 1.0 if groundtruth == predicted else 0.0
+    return 0.0
 
 
 def article_to_fields(article: Dict[str, Any]) -> Dict[str, Any]:

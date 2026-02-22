@@ -6,11 +6,36 @@ import re
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from benchmark_utils import load_crossref_checker
+from benchmark_utils import CORE_FIELDS, load_crossref_checker
 
 
 EXPECTED_TEX_IDS = [f"paper:{i}" for i in range(1, 8)]
 EXPECTED_TXT_IDS = [f"txt:{i}" for i in range(1, 8)]
+
+# Structured mutation targets are used by benchmark_score.py as primary source.
+MUTATED_FIELDS_ALL_BY_INDEX = {
+    1: ["title", "journal", "year", "doi", "url"],
+    2: ["authors", "year", "doi", "url"],
+    3: ["title", "journal"],
+    4: ["title", "pages", "doi", "url"],
+    5: ["title", "year", "doi", "url"],
+    6: ["title", "journal", "doi", "url"],
+    7: ["pages", "doi", "url"],
+}
+
+
+def _citation_index(citation_id: str) -> int:
+    _, idx = citation_id.split(":", 1)
+    return int(idx)
+
+
+def _mutated_fields(citation_id: str) -> Tuple[List[str], List[str]]:
+    idx = _citation_index(citation_id)
+    all_fields = MUTATED_FIELDS_ALL_BY_INDEX.get(idx)
+    if not all_fields:
+        raise ValueError(f"No structured mutation fields configured for {citation_id}")
+    core_fields = [field for field in all_fields if field in CORE_FIELDS]
+    return core_fields, all_fields
 
 
 def _replace_once(text: str, old: str, new: str, note: str, notes: List[str]) -> str:
@@ -204,6 +229,8 @@ def mutate_tex_content(text: str) -> Tuple[str, List[Dict[str, object]]]:
                 "citation_id": citation_id,
                 "mutation_count": len(notes),
                 "mutations": notes,
+                "mutated_fields_core": _mutated_fields(citation_id)[0],
+                "mutated_fields_all": _mutated_fields(citation_id)[1],
                 "before_excerpt": original_record.strip()[:220],
                 "after_excerpt": mutated_record.strip()[:220],
             }
@@ -233,6 +260,8 @@ def mutate_txt_content(text: str) -> Tuple[str, List[Dict[str, object]]]:
                 "citation_id": citation_id,
                 "mutation_count": len(notes),
                 "mutations": notes,
+                "mutated_fields_core": _mutated_fields(citation_id)[0],
+                "mutated_fields_all": _mutated_fields(citation_id)[1],
                 "before_excerpt": original_line[:220],
                 "after_excerpt": mutated_line[:220],
             }

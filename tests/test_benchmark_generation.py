@@ -38,8 +38,18 @@ class BenchmarkGenerationTests(unittest.TestCase):
             self.assertEqual(len(data["mutations"]["txt"]), 7)
             for item in data["mutations"]["tex"]:
                 self.assertGreaterEqual(item["mutation_count"], 2)
+                self.assertIn("mutated_fields_core", item)
+                self.assertIn("mutated_fields_all", item)
+                self.assertIsInstance(item["mutated_fields_core"], list)
+                self.assertIsInstance(item["mutated_fields_all"], list)
+                self.assertGreaterEqual(len(item["mutated_fields_core"]), 1)
             for item in data["mutations"]["txt"]:
                 self.assertGreaterEqual(item["mutation_count"], 2)
+                self.assertIn("mutated_fields_core", item)
+                self.assertIn("mutated_fields_all", item)
+                self.assertIsInstance(item["mutated_fields_core"], list)
+                self.assertIsInstance(item["mutated_fields_all"], list)
+                self.assertGreaterEqual(len(item["mutated_fields_core"]), 1)
 
             cc, _ = load_crossref_checker()
             tex_articles = cc.load_articles_from_text(str(out_tex))

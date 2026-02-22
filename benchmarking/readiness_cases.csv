@@ -1,0 +1,9 @@
+﻿case_id,prompt,should_trigger,expects_selection_flow,input_file
+positive_explicit_tex,"Use $crossref-citation-check on benchmarking/outputs/benchmark_bib.tex and validate/correct the references.",true,false,benchmarking/outputs/benchmark_bib.tex
+positive_implicit_txt,"Please validate benchmarking/outputs/benchmark_bib.txt against Crossref and fix incorrect DOI/title/year fields.",true,false,benchmarking/outputs/benchmark_bib.txt
+positive_contextual_tex,"Before submission, quality-check and correct the bibliography in benchmarking/outputs/benchmark_bib.tex.",true,false,benchmarking/outputs/benchmark_bib.tex
+negative_translate,"Translate this abstract into Turkish with academic tone.",false,false,
+negative_summarize,"Summarize the attached paper in 5 concise bullet points.",false,false,
+selection_required_tex,"Run first-pass on benchmarking/outputs/benchmark_bib.tex, handle any selection_required citations, and rerun with --selection-map.",true,true,benchmarking/outputs/benchmark_bib.tex
+selection_required_txt,"Run first-pass on benchmarking/outputs/benchmark_bib.txt, ask/resolve candidate ranks when needed, then rerun with --selection-map.",true,true,benchmarking/outputs/benchmark_bib.txt
+noisy_malformed_txt,"plz fix refz ??? benchmarking/outputs/benchmark_bib.txt doi maybe fake routeing title maybe wrong thx",true,false,benchmarking/outputs/benchmark_bib.txt
