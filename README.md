@@ -16,17 +16,22 @@ This skill validates references against Crossref and returns correction-ready me
 
 ## 30-Second Quick Start
 
-1. Clone this repository.
-2. Install the skill folder to your agent environment.
-3. Run a prompt against one sample file.
+Follow these copy-paste steps to get started locally and to run the checker on a sample file.
 
 ```powershell
 git clone https://github.com/kmkarakaya/crossref-citation-check.git
 cd crossref-citation-check
+
+# (optional) install the skill into your Codex/Agent skills folder:
+# mkdir -p ~/.codex/skills/crossref-citation-check
+# cp -r .github/skills/crossref-citation-check ~/.codex/skills/crossref-citation-check
+
+# Run the checker directly on the included sample `bib.tex` (replace email):
+python .github/skills/crossref-citation-check/crossref_checker.py -i bib.tex -o refs_results.json -e you@example.com
 ```
 
-Use this prompt in agent chat:
-- `Use $crossref-citation-check to validate bib.tex and save the report to refs_results.json.`
+Quick agent prompt (copy-paste):
+- Use `Use $crossref-citation-check to validate bib.tex and save the report to refs_results.json.` in your agent chat to run the skill.
 
 ## Repository Structure
 
@@ -156,14 +161,15 @@ For each citation, the skill reports:
 
 ## Direct Script Usage (Optional)
 
-If you want to run the checker directly:
+If you want to run the checker directly from the command line, copy one of these examples and replace the paths and email address as needed.
 
 ```powershell
+# Basic run (outputs JSON report):
 python .github/skills/crossref-citation-check/crossref_checker.py -i bib.tex -o refs_results.json -e you@example.com
-```
 
-Optional flag:
-- `--title-threshold 0.90` for stricter title matching
+# Stricter title matching:
+python .github/skills/crossref-citation-check/crossref_checker.py -i bib.tex -o refs_results.json -e you@example.com --title-threshold 0.90
+```
 
 ## Limitations
 
